@@ -266,6 +266,7 @@ soil_nitrification_n_flux <- make_soil_n_nitrification_flux(bk_density=soil_bulk
 ### Soil N mineralization flux
 soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bulk_density)
 
+### microbial N pool
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
@@ -378,24 +379,24 @@ make_summary_table_np_ratios()
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step 6: Making N budgeting variables and tables, based on raw data
 #### 6.1 Summary Tables
-source("programs/summary_tables/unnormalized/make_conc_summary_table_by_treatment.R")
-summary_table_concentration_by_treatment <- make_conc_summary_table_by_treatment()
+source("programs/summary_tables/unnormalized/make_conc_summary_table.R")
+summary_table_concentration <- make_conc_summary_table()
 
 ### P pools by treatment and ring
-source("programs/summary_tables/unnormalized/make_pool_summary_table_by_treatment.R")
-summary_table_pool_by_treatment <- make_pool_summary_table_by_treatment()
+source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
+summary_table_pool <- make_pool_summary_table()
 
 ### P fluxes by treatment and ring
-source("programs/summary_tables/unnormalized/make_flux_summary_table_by_treatment.R")
-summary_table_flux_by_treatment <- make_flux_summary_table_by_treatment()
+source("programs/summary_tables/unnormalized/make_flux_summary_table.R")
+summary_table_flux <- make_flux_summary_table()
 
 ### C pools by treatment and ring
-source("programs/summary_tables/unnormalized/make_c_pool_summary_table_by_treatment.R")
-summary_table_c_pool_by_treatment <- make_c_pool_summary_table_by_treatment()
+source("programs/summary_tables/unnormalized/make_c_pool_summary_table.R")
+summary_table_c_pool <- make_c_pool_summary_table()
 
 ### C fluxes by treatment and ring
-source("programs/summary_tables/unnormalized/make_c_flux_summary_table_by_treatment.R")
-summary_table_c_flux_by_treatment <- make_c_flux_summary_table_by_treatment()
+source("programs/summary_tables/unnormalized/make_c_flux_summary_table.R")
+summary_table_c_flux <- make_c_flux_summary_table()
 
 
 
@@ -424,16 +425,11 @@ summary_table_soil_p_budgets <- make_soil_p_budgeting_variables()
 write.csv(summary_table_soil_p_budgets, "plots_tables/summary_table_soil_p_budgets_unnormalized.csv", row.names=F)
 
 #### 6.3 Generating CP ratios 
-source("programs/summary_tables/unnormalized/make_cp_ratios.R")
-summary_cp_ratios <- make_cp_ratios(c_pool=summary_table_c_pool_by_treatment,
-                                    p_pool=summary_table_pool_by_treatment)
+source("programs/summary_tables/unnormalized/make_cp_ratio_summary_table.R")
+summary_cp_ratios <- make_cp_ratios(c_pool=summary_table_c_pool,
+                                    p_pool=summary_table_pool)
 
 write.csv(summary_cp_ratios, "plots_tables/summary_cp_ratios.csv", row.names=F)
-
-
-source("programs/check_variables/check_microbial_pool_CP_ratios.R")
-summary_microbial_pool_comparison <- check_microbial_pool_CP_ratios(c_pool=summary_table_c_pool_by_treatment,
-                                                                    p_pool=summary_table_pool_by_treatment)
 
 
 
