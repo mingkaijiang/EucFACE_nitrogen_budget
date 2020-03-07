@@ -43,3 +43,7 @@ vignettes/*.pdf
 
 # tokenfile
 tokenfile.txt
+
+# files
+*.csv
+*.pdf

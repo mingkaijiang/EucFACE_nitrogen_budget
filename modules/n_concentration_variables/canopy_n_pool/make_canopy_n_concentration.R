@@ -1,6 +1,9 @@
 #- Make the canopy N concentration
 make_canopy_n_concentration <- function() {
     ### return ring-specific canopy n data (mg/kg)
+    
+    ### download the data
+    download_canopy_n_data()
 
     ### new file code
     df <- read.csv("download/FACE_P0020_RA_NPleaf_2012-2018-L2.csv")
