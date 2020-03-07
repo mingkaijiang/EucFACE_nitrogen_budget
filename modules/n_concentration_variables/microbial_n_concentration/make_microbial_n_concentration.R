@@ -1,6 +1,7 @@
 make_microbial_n_concentration <- function() {
     # return ring-specific, continuous microbial N concentration
 
+    download_microbial_n_data()
 
     # download the data
     df <- read.csv(file.path(getToPath(), 

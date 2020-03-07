@@ -140,16 +140,10 @@ understorey_c_flux_2 <- make_understorey_aboveground_production_flux_2(c_fractio
 understorey_litter_c_flux <- make_understorey_litter_flux(c_fraction_ud)
 
 
-#source("programs/summary_variables/make_understorey_pool_size_comparison.R")
-#make_understorey_pool_size_comparison(understorey_c_pool,
-#                                      understorey_c_pool_2,
-#                                      plotting = T)
-
 ### estimate biomass growth based on cover data
 make_understorey_aboveground_growth_estimate(plotting = T)
 
 ### estimate % live and % dead
-source("programs/summary_variables/unnormalized/make_understorey_percent_live_estimate.R")
 understorey_live_percent <- make_understorey_percent_live_estimate()
 
 #### 2.11 Frass production

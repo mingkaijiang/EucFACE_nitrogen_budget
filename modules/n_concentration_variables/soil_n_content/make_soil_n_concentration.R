@@ -1,9 +1,9 @@
 #- Make the soil N concentration
-make_soil_n_concentration <- function(func){
+make_soil_n_concentration <- function(){
     # return ring-specific, time series data of soil N content 
 
     # download the data
-    download_soil_p_data()
+    download_soil_data()
     
     ## read in data - soil property data
     myDF2 <- read.csv(file.path(getToPath(), 
