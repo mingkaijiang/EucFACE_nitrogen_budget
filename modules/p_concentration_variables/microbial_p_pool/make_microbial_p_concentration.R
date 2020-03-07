@@ -1,5 +1,5 @@
 #- Make the microbial P concentration
-make_microbial_p_concentration <- function(func) {
+make_microbial_p_concentration <- function() {
     # return ring-specific, continuous microbial P concentration
 
     #Pmic,ug g-1,"Fumigation extraction with Bray P AQ2 determination of PO4.
@@ -7,10 +7,9 @@ make_microbial_p_concentration <- function(func) {
     # download the data
     download_microbial_p_data()
     
-    df1 <- read.csv(file.path(getToPath(), 
+    df <- read.csv(file.path(getToPath(), 
                              "FACE_P0014_RA_MicrobialBiomassCNP_L1_20120613-20151130.csv"))
-    df <- read.csv("temp_files/FACE_P0014_RA_MicrobialBiomassCNP_L1_20120613-20151130_V2.csv")
-    df$Pmic <- as.numeric(as.character(df$Pmic_2_noEF))
+    df$Pmic <- as.numeric(as.character(df$Pmic))
     df <- df[complete.cases(df$ring),]
     
     df$Date <- as.character(df$date)
@@ -22,7 +21,7 @@ make_microbial_p_concentration <- function(func) {
     
     # now, mean/min/max across rings and date
     df.m <- summaryBy(Pmic~ring+date,
-                     data=df2,FUN=func,keep.names=T,na.rm=T)
+                     data=df2,FUN=mean,keep.names=T,na.rm=T)
     
     df.m$PercP <- df.m$Pmic * 10^-4
     
@@ -42,7 +41,7 @@ make_microbial_p_concentration <- function(func) {
     
     ### 
     newdf.m <- summaryBy(mic_P_mg.kg~ring+depth+Date, data=newdf, 
-                         FUN=func, na.rm=T, keep.names=T)
+                         FUN=mean, na.rm=T, keep.names=T)
     newdf.s <- subset(newdf.m, depth == "0-10")
     newdf.s$PercP <- newdf.s$mic_P_mg.kg * 10^-4
     newdf.out <- newdf.s[,c("Date", "ring", "PercP")]
