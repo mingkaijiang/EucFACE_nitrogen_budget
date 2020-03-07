@@ -281,18 +281,11 @@ soil_phosphate_concentration <- make_soil_phosphate_concentration(func=mean)
 
 #### 1.3 Microbial P conc.
 #### Only top 10 cm!
-microbial_p_concentration <- make_microbial_p_concentration(func=mean)
+microbial_p_concentration <- make_microbial_p_concentration()
 
 
 #### 1.4 Canopy P conc.
 canopy_p_concentration <- make_canopy_p_concentration(func=mean)
-
-#canopy_p_concentration <- make_canopy_p_concentration_new(func=mean)
-#compare_canopy_p_conc_datasets(inDF1=canopy_p_concentration_limited_data, inDF2=canopy_p_concentration)
-
-#canopy_p_concentration <- make_canopy_p_concentration_fitted_with_age()
-
-
 
 #### 1.5 Leaf litter P conc. 
 leaflitter_p_concentration <- make_leaflitter_p_concentration(func=mean)
@@ -326,12 +319,18 @@ understorey_p_retranslocation_coefficient <- make_understorey_p_retranslocation(
 #### 1.12 Hedley fractionation dataset
 soil_hedley_p_concentration <- make_soil_hedley_p_concentration(func=mean)
 
+#### soil P pool and soil phosphate P pool
+soil_p_pool <- make_soil_p_pool(p_conc=soil_p_concentration,
+                                bk_density=soil_bulk_density)
+
+soil_phosphate_pool <- make_soil_phosphate_pool(p_conc=soil_phosphate_concentration,
+                                                bk_density=soil_bulk_density)
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step 5: Making NP ratios
 ### Canopy N:P ratio
-canopy_np_ratio <- make_canopy_np_ratios(n_pool=canopy_n_pool,
-                                         p_pool=canopy_p_pool)
+canopy_np_ratio <- make_canopy_np_ratios(n_conc=canopy_n_concentration,
+                                         p_conc=canopy_p_concentration)
 
 ### leaflitter N:P ratio
 leaflitter_np_ratio <- make_leaflitter_np_ratios(n_conc=leaflitter_n_concentration,

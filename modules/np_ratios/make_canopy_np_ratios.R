@@ -1,11 +1,11 @@
-make_canopy_np_ratios <- function(n_pool, p_pool) {
+make_canopy_np_ratios <- function(n_conc, p_conc) {
     
     # ring averages
-    n_avg <- summaryBy(leaf_n_pool~Ring, data=n_pool, FUN=mean, keep.names=T)
-    p_avg <- summaryBy(leaf_p_pool~Ring, data=p_pool, FUN=mean, keep.names=T)
+    n_avg <- summaryBy(PercN~Ring, data=n_conc, FUN=mean, keep.names=T)
+    p_avg <- summaryBy(PercP~Ring, data=p_conc, FUN=mean, keep.names=T)
     
     # out
-    out <- cbind(n_avg, p_avg$leaf_p_pool)
+    out <- cbind(n_avg, p_avg$PercP)
     colnames(out) <- c("Ring", "N", "P")
     out$np_ratio <- out$N/out$P
     
