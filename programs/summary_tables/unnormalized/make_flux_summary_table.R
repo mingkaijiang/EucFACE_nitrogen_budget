@@ -9,7 +9,7 @@ make_flux_summary_table <- function() {
                "Leaflitter N flux", "Fineroot Litter N flux",
                "Twig litter N flux", "Bark litter N flux","Seed litter N flux", "Frass N flux",
                "Understorey N flux", "Understorey Litter N flux", "Mineralization N flux",
-               "Leaching N flux", "Nitrification N flux")
+               "Leaching N flux", "Nitrification N flux", "Atmospheric deposition N flux")
     
     treatDF <- data.frame(terms)
     treatDF$R1 <- rep(NA, length(treatDF$terms))
@@ -160,17 +160,42 @@ make_flux_summary_table <- function() {
     treatDF$year_start[treatDF$terms == "Mineralization N flux"] <- min(year(soil_mineralization_n_flux$Date))    
     treatDF$year_end[treatDF$terms == "Mineralization N flux"] <- max(year(soil_mineralization_n_flux$Date))    
     treatDF$timepoint[treatDF$terms == "Mineralization N flux"] <- length(unique(soil_mineralization_n_flux$Date))  
-    treatDF$notes[treatDF$terms == "Mineralization N flux"] <- "obtained"
+    treatDF$notes[treatDF$terms == "Mineralization N flux"] <- "data"
+    
+    
+    ###  N nitrification
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Nitrification N flux", i+1] <- with(soil_nitrification_n_flux[soil_nitrification_n_flux$Ring ==i,],
+                                                                    sum(soil_n_nitrification_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Nitrification N flux"] <- min(year(soil_nitrification_n_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Nitrification N flux"] <- max(year(soil_nitrification_n_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Nitrification N flux"] <- length(unique(soil_nitrification_n_flux$Date))  
+    treatDF$notes[treatDF$terms == "Nitrification N flux"] <- "data"
+    
+    
     
     ###  N leaching flux
-    for (i in c(1:6)) {
-      treatDF[treatDF$terms == "Leaching N flux", i+1] <- with(soil_n_leaching[soil_n_leaching$Ring ==i,],
-                                                                     sum(phosphate_leaching_flux*Days)/sum(Days)) * conv
-    }
-    treatDF$year_start[treatDF$terms == "Leaching N flux"] <- min(year(soil_n_leaching$Date))    
-    treatDF$year_end[treatDF$terms == "Leaching N flux"] <- max(year(soil_n_leaching$Date))    
-    treatDF$timepoint[treatDF$terms == "Leaching N flux"] <- length(unique(soil_n_leaching$Date))  
-    treatDF$notes[treatDF$terms == "Leaching N flux"] <- "drainage 20 ml/d"
+    #for (i in c(1:6)) {
+    #  treatDF[treatDF$terms == "Leaching N flux", i+1] <- with(soil_n_leaching[soil_n_leaching$Ring ==i,],
+    #                                                                 sum(phosphate_leaching_flux*Days)/sum(Days)) * conv
+    #}
+    #treatDF$year_start[treatDF$terms == "Leaching N flux"] <- min(year(soil_n_leaching$Date))    
+    #treatDF$year_end[treatDF$terms == "Leaching N flux"] <- max(year(soil_n_leaching$Date))    
+    #treatDF$timepoint[treatDF$terms == "Leaching N flux"] <- length(unique(soil_n_leaching$Date))  
+    #treatDF$notes[treatDF$terms == "Leaching N flux"] <- "drainage 20 ml/d"
+    
+    
+    ### atmospheric N deposition flux
+    #for (i in c(1:6)) {
+    #  treatDF[treatDF$terms == "Atmospheric deposition N flux", i+1] <- with(atmospheric_deposition_n_flux[atmospheric_depositio_n_flux$Ring ==i,],
+    #                                                              sum(atmospheric_depositio_n_flux_mg_m2_d*Days)/sum(Days)) * conv
+    #}
+    #treatDF$year_start[treatDF$terms == "Atmospheric deposition N flux"] <- min(year(atmospheric_depositio_n_flux$Date))    
+    #treatDF$year_end[treatDF$terms == "Atmospheric deposition N flux"] <- max(year(atmospheric_depositio_n_flux$Date))    
+    #treatDF$timepoint[treatDF$terms == "Atmospheric deposition N flux"] <- length(unique(atmospheric_depositio_n_flux$Date))  
+    #treatDF$notes[treatDF$terms == "Atmospheric deposition N flux"] <- "Literature value"
+    
     
     ### calculate treatment averages
     treatDF$aCO2 <- round(rowMeans(subset(treatDF, select=c(R2, R3, R6)), na.rm=T), 5)

@@ -288,7 +288,12 @@ microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
                                           bk_density=soil_bulk_density)
 
 
-soil_leaching_n_flux <- make_soil_leaching_n_flux()
+### leaching flux
+#soil_leaching_n_flux <- make_soil_leaching_n_flux()
+
+### atmospheric N deposition flux
+### get a literature value for this
+#atmospheric_deposition_n_flux <- make_atmospheric_deposition_n_flux()
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 

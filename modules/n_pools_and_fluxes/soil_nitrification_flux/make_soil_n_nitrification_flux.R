@@ -37,5 +37,10 @@ make_soil_n_nitrification_flux <- function(bk_density) {
     myDF.out <- myDF.m[,c("date", "ring", "soil_n_nitrification")]
     colnames(myDF.out) <- c("Date", "Ring", "soil_n_nitrification_flux")
     
+    myDF.out$Start_date <- myDF.out$End_date <- myDF.out$Date
+    myDF.out$Days <- 1
+    
+    myDF.out <- myDF.out[complete.cases(myDF.out$soil_n_nitrification_flux),]
+    
     return(myDF.out)
 }
