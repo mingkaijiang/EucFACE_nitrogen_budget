@@ -150,7 +150,6 @@ understorey_live_percent <- make_understorey_percent_live_estimate()
 frass_c_production_flux <- make_frass_c_production_flux()
 
 #### 2.12 Soil C content
-
 ## Ring-specific bulk density
 soil_bulk_density <- make_soil_bulk_density()
 
@@ -181,6 +180,7 @@ leaflitter_c_pool <- make_leaflitter_pool(c_fraction)
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
+##### Step 3: Multiple pools and fluxes with concentration
 ###### Nitrogen pools and fluxes
 ### Canopy N pool
 canopy_n_pool <- make_canopy_n_pool(n_conc=canopy_n_concentration,
@@ -218,10 +218,13 @@ fineroot_n_production <- make_fineroot_n_production(n_conc=fineroot_n_concentrat
                                                     c_flux=fineroot_c_production_flux)
 
 ### coarseroot N pool
-#coarseroot_n_pool <- make_coarseroot_n_pool()
+coarseroot_n_pool <- make_coarseroot_n_pool(n_conc=wood_n_concentration,
+                                            c_pool=coarse_root_c_pool,
+                                            case_consideration="total")
 
 ### coarseroot N production
-#coarseroot_n_production <- make_coarseroot_n_production()
+coarseroot_n_production <- make_coarseroot_n_production(n_conc=wood_n_concentration,
+                                                        c_flux=coarse_root_c_flux)
 
 
 ### Frass N production
@@ -245,7 +248,9 @@ understorey_n_flux <- make_understorey_n_flux(n_conc=understorey_n_concentration
 ### no data
 
 ### leaflitter N pool
-#leaflitter_n_pool <- make_leaflitter_n_pool()
+leaflitter_n_pool <- make_leaflitter_n_pool(n_conc=leaflitter_n_concentration,
+                                            c_pool=leaflitter_c_pool,
+                                            c_frac=c_fraction)
 
 ### Soil N pool
 soil_n_pool <- make_soil_n_pool(n_conc=soil_n_concentration,
@@ -267,6 +272,10 @@ soil_nitrification_n_flux <- make_soil_n_nitrification_flux(bk_density=soil_bulk
 soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bulk_density)
 
 ### microbial N pool
+#### Top 10 cm
+microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
+                                          bk_density=soil_bulk_density)
+
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
@@ -385,6 +394,9 @@ summary_table_concentration <- make_conc_summary_table()
 ### P pools by treatment and ring
 source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
 summary_table_pool <- make_pool_summary_table()
+
+
+### end of 07-03-2020
 
 ### P fluxes by treatment and ring
 source("programs/summary_tables/unnormalized/make_flux_summary_table.R")
