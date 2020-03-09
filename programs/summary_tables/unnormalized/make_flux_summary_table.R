@@ -154,8 +154,8 @@ make_flux_summary_table <- function() {
     
     ###  N mineralization flux
     for (i in c(1:6)) {
-        treatDF[treatDF$terms == "Mineralization N flux", i+1] <- sum(soil_mineralization_n_flux[soil_mineralization_n_flux$Ring==i, "soil_mineralization_n_flux"]) / 
-          sum(soil_mineralization_n_flux[soil_mineralization_n_flux$Ring==i, "Days"]) & conv
+        treatDF[treatDF$terms == "Mineralization N flux", i+1] <- with(soil_mineralization_n_flux[soil_mineralization_n_flux$Ring ==i,],
+                                                                       sum(soil_n_mineralization_flux*Days)/sum(Days)) * conv
     }
     treatDF$year_start[treatDF$terms == "Mineralization N flux"] <- min(year(soil_mineralization_n_flux$Date))    
     treatDF$year_end[treatDF$terms == "Mineralization N flux"] <- max(year(soil_mineralization_n_flux$Date))    

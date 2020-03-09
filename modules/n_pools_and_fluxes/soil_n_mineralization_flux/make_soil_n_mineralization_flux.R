@@ -40,7 +40,7 @@ make_soil_n_mineralization_flux <- function(bk_density) {
     myDF.out$Start_date <- myDF.out$End_date <- myDF.out$Date
     myDF.out$Days <- 1
     
-    myDF.out <- myDF.out[complete.cases(myDF.out$soil_n_mineralization_flux),]
+    #myDF.out <- myDF.out[complete.cases(myDF.out$soil_n_mineralization_flux),]
     
     
     return(myDF.out)

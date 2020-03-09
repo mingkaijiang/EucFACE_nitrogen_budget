@@ -3,15 +3,16 @@
 #### Ignore time but produce time coverage information
 #### This is for fluxes
 
-make_c_flux_summary_table_by_treatment <- function() {
+make_c_flux_summary_table <- function() {
     
     ### convert daily flux in mg C m2 d-1 to g C m-2 yr-1
     conv <- 365 / 1000
     
     ### Define production variable names
-    terms <- c("Wood C flux", "Canopy C flux", "Fine Root C flux",
-               "Coarse Root C flux","Leaflitter C flux", "Fineroot Litter C flux",
-               "Frass C flux","Understorey C flux")
+    terms <- c( "Canopy C flux", "Wood C flux", "Coarse Root C flux", "Fine Root C flux",
+                "Understorey C flux",
+               "Leaflitter C flux", "Fineroot Litter C flux", "Understorey Litter C flux",
+               "Frass C flux")
     
     treatDF <- data.frame(terms)
     treatDF$R1 <- rep(NA, length(treatDF$terms))
@@ -81,6 +82,17 @@ make_c_flux_summary_table_by_treatment <- function() {
     treatDF$year_end[treatDF$terms == "Understorey C flux"] <- max(year(understorey_c_flux$Date))    
     treatDF$timepoint[treatDF$terms == "Understorey C flux"] <- length(unique(understorey_c_flux$Date))  
     treatDF$notes[treatDF$terms == "Understorey C flux"] <- "Harvest data"
+    
+    
+    ### Understorey litter C flux
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Understorey Litter C flux", i+1] <- with(understorey_litter_c_flux[understorey_litter_c_flux$Ring ==i,],
+                                                                  sum(understorey_litter_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Understorey Litter C flux"] <- min(year(understorey_litter_c_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Understorey Litter C flux"] <- max(year(understorey_litter_c_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Understorey Litter C flux"] <- length(unique(understorey_litter_c_flux$Date))  
+    treatDF$notes[treatDF$terms == "Understorey Litter C flux"] <- "50% retrans"
     
     ### Frass production flux
     for (i in c(1:6)) {

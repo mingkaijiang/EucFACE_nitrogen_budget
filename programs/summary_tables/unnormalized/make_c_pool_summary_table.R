@@ -3,13 +3,13 @@
 #### Ignore time but produce time coverage information
 #### This is for pools
 
-make_c_pool_summary_table_by_treatment <- function() {
+make_c_pool_summary_table <- function() {
     
     ### Define pool variable names
-    terms <- c("Wood C Pool", "Canopy C Pool", "Fine Root C Pool",
-               "Coarse Root C Pool", "Understorey C Pool", 
+    terms <- c("Canopy C Pool", "Wood C Pool", "Coarse Root C Pool", "Fine Root C Pool",
+               "Understorey C Pool", "Leaflitter C Pool",
                "Microbial C Pool", 
-               "Soil C Pool", "Mycorrhizal C Pool")
+               "Soil C Pool")
     
     treatDF <- data.frame(terms)
     treatDF$R1 <- rep(NA, length(treatDF$terms))
@@ -37,6 +37,15 @@ make_c_pool_summary_table_by_treatment <- function() {
     treatDF$timepoint[treatDF$terms == "Canopy C Pool"] <- length(unique(canopy_biomass_pool$Date))  
     treatDF$notes[treatDF$terms == "Canopy C Pool"] <- "Estimated based on LAI and SLA"
 
+    
+    ### Leaflitter C pool
+    out <- summaryBy(leaflitter_pool~Ring,data=leaflitter_c_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Leaflitter C Pool", 2:7] <- out$leaflitter_pool
+    treatDF$year_start[treatDF$terms == "Leaflitter C Pool"] <- min(year(leaflitter_c_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Leaflitter C Pool"] <- max(year(leaflitter_c_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Leaflitter C Pool"] <- length(unique(leaflitter_c_pool$Date))  
+    treatDF$notes[treatDF$terms == "Leaflitter C Pool"] <- "based on decomposition data"
+    
     
     ### Wood C 
     out <- summaryBy(wood_pool~Ring,data=wood_c_pool,FUN=mean,keep.names=T,na.rm=T)
@@ -88,15 +97,6 @@ make_c_pool_summary_table_by_treatment <- function() {
     treatDF$year_end[treatDF$terms == "Soil C Pool"] <- max(year(soil_c_pool$Date))    
     treatDF$timepoint[treatDF$terms == "Soil C Pool"] <- length(unique(soil_c_pool$Date))  
     treatDF$notes[treatDF$terms == "Soil C Pool"] <- "Averaged across all C forms"
-    
-
-    ### Mycorrhizal C pool
-    out <- summaryBy(mycorrhizal_c_pool~Ring,data=mycorrhizal_c_pool,FUN=mean,keep.names=T,na.rm=T)
-    treatDF[treatDF$terms == "Mycorrhizal C Pool", 2:7]  <- out$mycorrhizal_c_pool
-    treatDF$year_start[treatDF$terms == "Mycorrhizal C Pool"] <- min(year(mycorrhizal_c_pool$Date))
-    treatDF$year_end[treatDF$terms == "Mycorrhizal C Pool"] <- max(year(mycorrhizal_c_pool$Date))
-    treatDF$timepoint[treatDF$terms == "Mycorrhizal C Pool"] <- length(unique(mycorrhizal_c_pool$Date))
-    treatDF$notes[treatDF$terms == "Mycorrhizal C Pool"]  <- "For 0 - 30 cm depth, assumed 70% sand"
     
     
     ### calculate treatment averages

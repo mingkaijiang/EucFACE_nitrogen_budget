@@ -429,36 +429,33 @@ summary_table_c_flux <- make_c_flux_summary_table()
 
 
 
-#### 6.2 Summary variables
-### Calculate all P budgeting variables
-source("programs/summary_variables/unnormalized/make_total_p_budgeting_variables.R")
-summary_table_total_p_budgets <- make_total_p_budgeting_variables()
+#### 6.2 Summary budgets
+### Calculate all N budgeting variables
+source("programs/summary_budgets/unnormalized/make_total_n_budget.R")
+summary_table_total_n_budget <- make_total_n_budget()
+write.csv(summary_table_total_n_budget, "plots_tables/summary_table_total_n_budget_unnormalized.csv", row.names=F)
 
-write.csv(summary_table_total_p_budgets, "plots_tables/summary_table_total_p_budgets_unnormalized.csv", row.names=F)
-
-source("programs/summary_variables/unnormalized/make_overstorey_p_budgeting_variables.R")
-summary_table_overstorey_p_budgets <- make_overstorey_p_budgeting_variables()
-
-write.csv(summary_table_overstorey_p_budgets, "plots_tables/summary_table_overstorey_p_budgets_unnormalized.csv", row.names=F)
+source("programs/summary_budgets/unnormalized/make_overstorey_n_budgeting_variables.R")
+summary_table_overstorey_n_budgets <- make_overstorey_n_budgeting_variables()
+write.csv(summary_table_overstorey_n_budgets, "plots_tables/summary_table_overstorey_n_budgets_unnormalized.csv", row.names=F)
 
 
-source("programs/summary_variables/unnormalized/make_understorey_p_budgeting_variables.R")
-summary_table_understorey_p_budgets <- make_understorey_p_budgeting_variables()
+source("programs/summary_budgets/unnormalized/make_understorey_n_budgeting_variables.R")
+summary_table_understorey_n_budgets <- make_understorey_n_budgeting_variables()
+write.csv(summary_table_understorey_n_budgets, "plots_tables/summary_table_understorey_n_budgets_unnormalized.csv", row.names=F)
 
-write.csv(summary_table_understorey_p_budgets, "plots_tables/summary_table_understorey_p_budgets_unnormalized.csv", row.names=F)
+
+source("programs/summary_budgets/unnormalized/make_soil_n_budgeting_variables.R")
+summary_table_soil_n_budgets <- make_soil_n_budgeting_variables()
+write.csv(summary_table_soil_n_budgets, "plots_tables/summary_table_soil_n_budgets_unnormalized.csv", row.names=F)
 
 
-source("programs/summary_variables/unnormalized/make_soil_p_budgeting_variables.R")
-summary_table_soil_p_budgets <- make_soil_p_budgeting_variables()
 
-write.csv(summary_table_soil_p_budgets, "plots_tables/summary_table_soil_p_budgets_unnormalized.csv", row.names=F)
-
-#### 6.3 Generating CP ratios 
-source("programs/summary_tables/unnormalized/make_cp_ratio_summary_table.R")
-summary_cp_ratios <- make_cp_ratios(c_pool=summary_table_c_pool,
+#### 6.3 Generating CN ratios 
+source("programs/summary_tables/unnormalized/make_cn_ratio_summary_table.R")
+summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
                                     p_pool=summary_table_pool)
-
-write.csv(summary_cp_ratios, "plots_tables/summary_cp_ratios.csv", row.names=F)
+write.csv(summary_cn_ratios, "plots_tables/summary_cn_ratios.csv", row.names=F)
 
 
 
