@@ -4,8 +4,8 @@
 make_conc_summary_table <- function() {
     
     ### Define concentration variable names
-    conc.terms <- c("Wood N Conc", "Canopy N Conc", "Fine Root N Conc", "Coarse Root N Conc",
-                    "Leaflitter N Conc","Understorey N Conc", "Understorey Litter N Conc", 
+    conc.terms <- c("Canopy N Conc", "Wood N Conc", "Coarse Root N Conc", "Fine Root N Conc",
+                    "Understorey N Conc", "Leaflitter N Conc", 
                     "Frass N Conc", "Microbial N Conc", "Soil N Conc")
     
     treatDF <- data.frame(conc.terms)
@@ -79,6 +79,7 @@ make_conc_summary_table <- function() {
     treatDF$notes[treatDF$conc.terms == "Understorey N Conc"] <- "Assumed Cymbopogon and Microlaena contributed equally"
     
     ### Understorey Litter N concentration
+    # no data
     
     ### Frass N concentration
     out <- summaryBy(PercN~Ring,data=frass_n_concentration,FUN=mean,keep.names=T,na.rm=T)

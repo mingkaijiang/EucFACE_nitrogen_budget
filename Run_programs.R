@@ -288,6 +288,8 @@ microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
                                           bk_density=soil_bulk_density)
 
 
+soil_leaching_n_flux <- make_soil_leaching_n_flux()
+
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step 4: Generate P concentrations
@@ -402,14 +404,13 @@ make_summary_table_np_ratios()
 source("programs/summary_tables/unnormalized/make_conc_summary_table.R")
 summary_table_concentration <- make_conc_summary_table()
 
-### P pools by treatment and ring
+### N pools by treatment and ring
 source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
 summary_table_pool <- make_pool_summary_table()
+# why canopy N pool is small relative to canopy P pool (i.e. NP ratio = 10)
 
 
-### end of 07-03-2020
-
-### P fluxes by treatment and ring
+### N fluxes by treatment and ring
 source("programs/summary_tables/unnormalized/make_flux_summary_table.R")
 summary_table_flux <- make_flux_summary_table()
 

@@ -6,10 +6,8 @@
 make_pool_summary_table <- function() {
     
     ### Define pool variable names
-    terms <- c("Wood N Pool", "Canopy N Pool", "Canopy Litter N Pool",
-               "Fine Root N Pool",
-               "Coarse Root N Pool", "Understorey N Pool", 
-               "Understorey Litter N Pool",
+    terms <- c("Canopy N Pool", "Wood N Pool", "Coarse Root N Pool", "Fine Root N Pool",
+               "Understorey N Pool", "Canopy Litter N Pool",
                "Microbial N Pool", 
                "Soil N Pool")
     
@@ -40,12 +38,12 @@ make_pool_summary_table <- function() {
     treatDF$notes[treatDF$terms == "Canopy N Pool"] <- "used monthly concentration values to extrapolate"
 
     ### Canopy Litter N 
-    #out <- summaryBy(leaflitter_n_pool~Ring,data=leaflitter_n_pool,FUN=mean,keep.names=T,na.rm=T)
-    #treatDF[treatDF$terms == "Canopy Litter N Pool", 2:7] <- out$leaflitter_n_pool
-    #treatDF$year_start[treatDF$terms == "Canopy Litter N Pool"] <- min(year(leaflitter_n_pool$Date))    
-    #treatDF$year_end[treatDF$terms == "Canopy Litter N Pool"] <- max(year(leaflitter_n_pool$Date))    
-    #treatDF$timepoint[treatDF$terms == "Canopy Litter N Pool"] <- length(unique(leaflitter_n_pool$Date))  
-    #treatDF$notes[treatDF$terms == "Canopy Litter N Pool"] <- "calculated based on leaflitter N concentration and leaflitter pool"
+    out <- summaryBy(leaflitter_n_pool~Ring,data=leaflitter_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Canopy Litter N Pool", 2:7] <- out$leaflitter_n_pool
+    treatDF$year_start[treatDF$terms == "Canopy Litter N Pool"] <- min(year(leaflitter_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Canopy Litter N Pool"] <- max(year(leaflitter_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Canopy Litter N Pool"] <- length(unique(leaflitter_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Canopy Litter N Pool"] <- "calculated based on leaflitter N concentration and leaflitter pool"
     
     ### Wood N 
     out <- summaryBy(wood_n_pool~Ring,data=wood_n_pool,FUN=mean,keep.names=T,na.rm=T)
@@ -65,12 +63,12 @@ make_pool_summary_table <- function() {
     treatDF$notes[treatDF$terms == "Fine Root N Pool"] <- "Top 30 cm"
     
     ### Coarse root N pool
-    #out <- summaryBy(coarse_root_n_pool~Ring,data=coarse_root_n_pool,FUN=mean,keep.names=T,na.rm=T)
-    #treatDF[treatDF$terms == "Coarse Root N Pool", 2:7] <- out$coarse_root_n_pool
-    #treatDF$year_start[treatDF$terms == "Coarse Root N Pool"] <- min(year(coarse_root_n_pool$Date))    
-    #treatDF$year_end[treatDF$terms == "Coarse Root N Pool"] <- max(year(coarse_root_n_pool$Date))    
-    #treatDF$timepoint[treatDF$terms == "Coarse Root N Pool"] <- length(unique(coarse_root_n_pool$Date))  
-    #treatDF$notes[treatDF$terms == "Coarse Root N Pool"] <- "Allometric rlt with DBH"
+    out <- summaryBy(coarseroot_n_pool~Ring,data=coarseroot_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Coarse Root N Pool", 2:7] <- out$coarseroot_n_pool
+    treatDF$year_start[treatDF$terms == "Coarse Root N Pool"] <- min(year(coarseroot_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Coarse Root N Pool"] <- max(year(coarseroot_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Coarse Root N Pool"] <- length(unique(coarseroot_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Coarse Root N Pool"] <- "Allometric rlt with DBH"
     
     ### Understorey N pool
     out <- summaryBy(understorey_n_pool~Ring,data=understorey_n_pool,FUN=mean,keep.names=T,na.rm=T)
@@ -80,22 +78,14 @@ make_pool_summary_table <- function() {
     treatDF$timepoint[treatDF$terms == "Understorey N Pool"] <- length(unique(understorey_n_pool$Date))  
     treatDF$notes[treatDF$terms == "Understorey N Pool"] <- "Used harvest estimate of C pool"
     
-    ### Understorey Litter N pool
-    #out <- summaryBy(dead_n_pool~Ring,data=understorey_n_pool,FUN=mean,keep.names=T,na.rm=T)
-    #treatDF[treatDF$terms == "Understorey Litter N Pool", 2:7] <- out$dead_n_pool
-    #treatDF$year_start[treatDF$terms == "Understorey Litter N Pool"] <- min(year(understorey_n_pool$Date))    
-    #treatDF$year_end[treatDF$terms == "Understorey Litter N Pool"] <- max(year(understorey_n_pool$Date))    
-    #treatDF$timepoint[treatDF$terms == "Understorey Litter N Pool"] <- length(unique(understorey_n_pool$Date))  
-    #treatDF$notes[treatDF$terms == "Understorey Litter N Pool"] <- "Used harvest estimate of C pool"
-
     
     ### Microbial N pool
-    #out <- summaryBy(microbial_n_g_m2~Ring,data=microbial_n_pool,FUN=mean,keep.names=T,na.rm=T)
-    #treatDF[treatDF$terms == "Microbial N Pool", 2:7] <- out$microbial_n_g_m2
-    #treatDF$year_start[treatDF$terms == "Microbial N Pool"] <- min(year(microbial_n_pool$Date))    
-    #treatDF$year_end[treatDF$terms == "Microbial N Pool"] <- max(year(microbial_n_pool$Date))    
-    #treatDF$timepoint[treatDF$terms == "Microbial N Pool"] <- length(unique(microbial_n_pool$Date))  
-    #treatDF$notes[treatDF$terms == "Microbial N Pool"] <- "Top 10 cm"
+    out <- summaryBy(microbial_n_g_m2~Ring,data=microbial_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Microbial N Pool", 2:7] <- out$microbial_n_g_m2
+    treatDF$year_start[treatDF$terms == "Microbial N Pool"] <- min(year(microbial_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Microbial N Pool"] <- max(year(microbial_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Microbial N Pool"] <- length(unique(microbial_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Microbial N Pool"] <- "Top 10 cm"
     
 
     ### Soil N pool
