@@ -11,7 +11,7 @@
 #### 1. Compute nitrogen concentrations for major pools and fluxes
 #### 2. Compute biomass pools
 #### 3. Generate N pools and fluxes
-#### 4. Generate P related concentrations
+#### 4. Generate P concentrations
 #### 5. Generate N:P ratios
 #### 6. Generate summary tables, based on unnormalized responses
 
@@ -217,6 +217,14 @@ fineroot_n_pool <- make_fineroot_n_pool(n_conc=fineroot_n_concentration,
 fineroot_n_production <- make_fineroot_n_production(n_conc=fineroot_n_concentration,
                                                     c_flux=fineroot_c_production_flux)
 
+### fineroot litter N flux
+### assuming N retranslocation coefficient for fine root is 50%
+### and fine root c production flux is fine root c litter flux
+fineroot_litter_n_flux <- make_fineroot_litter_n_flux(n_conc=fineroot_n_concentration,
+                                                      c_flux=fineroot_c_production_flux,
+                                                      n_retrans=0.5)
+
+
 ### coarseroot N pool
 coarseroot_n_pool <- make_coarseroot_n_pool(n_conc=wood_n_concentration,
                                             c_pool=coarse_root_c_pool,
@@ -246,6 +254,9 @@ understorey_n_flux <- make_understorey_n_flux(n_conc=understorey_n_concentration
 
 ### Understorey litter N flux
 ### no data
+understorey_litter_n_flux <- make_understorey_litter_n_flux(n_conc=understorey_n_concentration,
+                                                      c_flux=understorey_c_flux,
+                                                      n_retrans=0.5)
 
 ### leaflitter N pool
 leaflitter_n_pool <- make_leaflitter_n_pool(n_conc=leaflitter_n_concentration,
@@ -280,7 +291,6 @@ microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step 4: Generate P concentrations
-
 #### 1.1: Soil P concentrations 
 soil_p_concentration <- make_soil_p_concentration(func=mean)
 
@@ -299,9 +309,6 @@ canopy_p_concentration <- make_canopy_p_concentration(func=mean)
 
 #### 1.5 Leaf litter P conc. 
 leaflitter_p_concentration <- make_leaflitter_p_concentration(func=mean)
-
-
-#leaflitter_p_concentration <- make_leaflitter_p_concentration_new(func=mean)
 
 
 #### 1.6 Wood P conc. 
@@ -335,6 +342,10 @@ soil_p_pool <- make_soil_p_pool(p_conc=soil_p_concentration,
 
 soil_phosphate_pool <- make_soil_phosphate_pool(p_conc=soil_phosphate_concentration,
                                                 bk_density=soil_bulk_density)
+
+
+
+
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step 5: Making NP ratios
