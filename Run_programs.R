@@ -35,6 +35,7 @@ source("programs/prepare.R")
 canopy_n_concentration <- make_canopy_n_concentration()
 
 ### Wood N concentration
+### we do not know if this is the sapwood or heartwood N concentration!
 wood_n_concentration <- make_wood_n_concentration()
 
 ### Fineroot N concentration
@@ -451,6 +452,27 @@ wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.5)
 coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.5)
 
 
+### 6.3 some summary variables
+### vegetation standing N stocks
+vegetation_standing_n_stock <- make_vegetation_standing_n_stock(leaf=canopy_n_pool,
+                                                                wood=wood_n_pool,
+                                                                fineroot=fineroot_n_pool,
+                                                                coarseroot=coarseroot_n_pool,
+                                                                understorey=understorey_n_pool)
+
+### total plant N requirement flux, retranslocation flux, and uptake flux
+### for total retranslocation flux and uptake flux,
+### we do not have heartwood data so ignores wood and coarseroot in this calculation!!!!!
+total_plant_n_fluxes <- make_total_plant_n_fluxes(sumDF=summary_table_flux)
+
+
+### N mean residence time in plant
+plant_n_MRT <- make_plant_N_mean_residence_time(n_stand=vegetation_standing_n_stock,
+                                                n_flux=total_plant_n_fluxes)
+
+### Plant nitrogen use efficiency
+plant_n_use_efficiency <- make_plant_N_use_efficiency(c_flux=summary_table_c_flux,
+                                                      n_flux=total_plant_n_fluxes)
 
 
 #### 6.3 Summary budgets
