@@ -429,7 +429,31 @@ summary_table_c_flux <- make_c_flux_summary_table()
 
 
 
-#### 6.2 Summary budgets
+### 6.2 retranslocation coefficients
+### canopy leaf n retranslocation coefficient
+leaf_n_retrans_coefficient <- make_canopy_leaf_n_retranslocation_coefficient(df1=canopy_n_concentration,
+                                                                             df2=leaflitter_n_concentration)
+
+### understorey leaf n retranslocation coefficient
+### assumed value
+understorey_n_retrans_coefficient <- make_understorey_n_retrans_coefficient(retrans=0.5)
+
+### fineroot retrans
+### assumed value
+fineroot_n_retrans_coefficient <- make_fineroot_n_retrans_coefficient(retrans=0.5)
+
+### wood retrans
+### assumed value
+wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.5)
+
+### coarseroot retrans
+### assumed value
+coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.5)
+
+
+
+
+#### 6.3 Summary budgets
 ### Calculate all N budgeting variables
 source("programs/summary_budgets/unnormalized/make_total_n_budget.R")
 summary_table_total_n_budget <- make_total_n_budget()
