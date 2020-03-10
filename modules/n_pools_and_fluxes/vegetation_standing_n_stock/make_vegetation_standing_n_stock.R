@@ -17,6 +17,13 @@ make_vegetation_standing_n_stock <- function(leaf, wood, understorey, fineroot, 
     ### Calculate total
     out$total <- with(out, (leaf+wood+fineroot+coarseroot+understorey))
     
+    ### calculate oa
+    out$oa <- with(out, (leaf+wood))
+    
+    ### calculate belowground
+    out$belowground <- with(out, (fineroot+coarseroot))
+    
+    
     ### assign aCO2 and eCO2
     out$Trt <- c("eCO2", "aCO2", "aCO2", "eCO2", "eCO2", "aCO2")
     

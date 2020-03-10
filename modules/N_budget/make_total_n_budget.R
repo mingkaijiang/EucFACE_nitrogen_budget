@@ -10,7 +10,10 @@ make_total_n_budget <- function() {
                "Atmospheric N deposition flux",
                "Plant N uptake over requirement",
                "Plant N MRT", 
-               "Plant NUE")
+               "Plant NUE",
+               "Overstorey aboveground N stock",
+               "Understorey aboveground N stock",
+               "Belowground N stock")
     
     out <- data.frame(terms, NA, NA, NA, NA, NA, NA, NA, NA)
     colnames(out) <- c("terms", "R1", "R2", "R3", "R4", "R5", "R6", "aCO2", "eCO2")
@@ -36,6 +39,11 @@ make_total_n_budget <- function() {
     
     out[out$terms == "Plant NUE", 2:7] <- round(plant_n_use_efficiency$NUE,2)
     
+    out[out$terms == "Overstorey aboveground N stock", 2:7] <- round(vegetation_standing_n_stock$oa,2)
+    
+    out[out$terms == "Understorey aboveground N stock", 2:7] <- round(vegetation_standing_n_stock$understorey,2)
+    
+    out[out$terms == "Belowground N stock", 2:7] <- round(vegetation_standing_n_stock$belowground,2)
     
     
     ### aCO2 and eCO2 averages

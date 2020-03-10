@@ -485,6 +485,34 @@ total_n_budget <- make_total_n_budget()
 
 
 
+##### ---------------------------------------------------------------------------------------------------------##### 
+##### Step 7. Make plots, based on unnormalized responses
+### combine summary tables
+#inDF <- rbind(summary_table_total_p_budgets_normalized,
+#              summary_table_overstorey_p_budgets_normalized,
+#              summary_table_understorey_p_budgets_normalized,
+#              summary_table_soil_p_budgets_normalized)
+
+
+source("programs/plot_scripts/make_n_budget_summary_plots.R")
+make_summary_p_budget_plots(inDF=total_n_budget)
+
+### This is based on unnormalized data!
+source("programs/plot_scripts/make_summary_p_concentration_plots.R")
+make_summary_p_concentration_plots(inDF=summary_table_concentration_by_treatment)
+
+
+source("programs/plot_scripts/make_summary_p_pools_plots.R")
+make_summary_p_pools_plots(inDF=summary_table_pool_by_treatment_normalized)
+
+
+source("programs/plot_scripts/make_summary_p_fluxes_plots.R")
+make_summary_p_fluxes_plots(inDF=summary_table_flux_by_treatment_normalized)
+
+
+#### Individial rings
+source("programs/plot_scripts/make_summary_p_budget_ring_plots.R")
+make_summary_p_budget_ring_plots(inDF=summary_table_total_p_budgets_normalized)
 
 
 
