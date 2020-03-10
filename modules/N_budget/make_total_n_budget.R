@@ -1,15 +1,5 @@
 make_total_n_budget <- function() {
     #### This function calculates all N budgeting variables
-    
-    
-    
-    ### Standing PUE, i.e. NPP / P Uptake
-    source("programs/summary_variables/make_standing_pue.R")
-    standing_pue <- make_standing_pue(p_up=total_p_uptake_from_soil)
-    
-    p_mineralization <- summaryBy(p_mineralization_mg_m2_d~Ring, FUN=mean, keep.names=T, data=soil_p_mineralization)
-    p_mineralization$p_mineralization <- with(p_mineralization, p_mineralization_mg_m2_d * 365/1000)
-    
     ### out df
     terms <- c("total standing p stock", 
                "total p requirement", 
@@ -73,6 +63,8 @@ make_total_n_budget <- function() {
     out[out$terms == "total standing PUE", "notes"] <- "NPP / uptake"
     
     out[out$terms == "labile Pi stock", "notes"] <- "Exchangeable Pi based on Hedley"
+    
+    write.csv(summary_table_total_n_budget, "plots_tables/summary_table_total_n_budget_unnormalized.csv", row.names=F)
     
     
     return(out)

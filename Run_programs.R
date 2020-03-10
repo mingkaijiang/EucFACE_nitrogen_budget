@@ -477,9 +477,7 @@ plant_n_use_efficiency <- make_plant_N_use_efficiency(c_flux=summary_table_c_flu
 
 #### 6.3 Summary budgets
 ### Calculate all N budgeting variables
-source("programs/summary_budgets/unnormalized/make_total_n_budget.R")
-summary_table_total_n_budget <- make_total_n_budget()
-write.csv(summary_table_total_n_budget, "plots_tables/summary_table_total_n_budget_unnormalized.csv", row.names=F)
+total_n_budget <- make_total_n_budget()
 
 source("programs/summary_budgets/unnormalized/make_overstorey_n_budgeting_variables.R")
 summary_table_overstorey_n_budgets <- make_overstorey_n_budgeting_variables()
