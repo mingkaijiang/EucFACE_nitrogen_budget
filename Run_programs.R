@@ -14,6 +14,7 @@
 #### 4. Generate P concentrations
 #### 5. Generate N:P ratios
 #### 6. Generate summary tables, based on unnormalized responses
+#### 7. Make plots, based on unnormalized responses
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
@@ -397,13 +398,6 @@ microbial_np_ratio <- make_microbial_np_ratios(n_conc=microbial_n_concentration,
                                                p_conc=microbial_p_concentration)
 
 
-
-####### make a output table to store all np ratios
-make_summary_table_np_ratios()
-
-
-
-
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step 6: Making N budgeting variables and tables, based on raw data
 #### 6.1 Summary Tables
@@ -427,6 +421,16 @@ summary_table_c_pool <- make_c_pool_summary_table()
 ### C fluxes by treatment and ring
 source("programs/summary_tables/unnormalized/make_c_flux_summary_table.R")
 summary_table_c_flux <- make_c_flux_summary_table()
+
+#### CN ratios 
+summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
+                                    n_pool=summary_table_pool,
+                                    c_flux=summary_table_c_flux,
+                                    n_flux=summary_table_flux)
+
+#### NP ratios
+summary_np_ratios <- make_summary_table_np_ratios()
+
 
 
 
@@ -475,31 +479,12 @@ plant_n_use_efficiency <- make_plant_N_use_efficiency(c_flux=summary_table_c_flu
                                                       n_flux=total_plant_n_fluxes)
 
 
-#### 6.3 Summary budgets
+#### 6.3 N budget summary
 ### Calculate all N budgeting variables
 total_n_budget <- make_total_n_budget()
 
-source("programs/summary_budgets/unnormalized/make_overstorey_n_budgeting_variables.R")
-summary_table_overstorey_n_budgets <- make_overstorey_n_budgeting_variables()
-write.csv(summary_table_overstorey_n_budgets, "plots_tables/summary_table_overstorey_n_budgets_unnormalized.csv", row.names=F)
 
 
-source("programs/summary_budgets/unnormalized/make_understorey_n_budgeting_variables.R")
-summary_table_understorey_n_budgets <- make_understorey_n_budgeting_variables()
-write.csv(summary_table_understorey_n_budgets, "plots_tables/summary_table_understorey_n_budgets_unnormalized.csv", row.names=F)
-
-
-source("programs/summary_budgets/unnormalized/make_soil_n_budgeting_variables.R")
-summary_table_soil_n_budgets <- make_soil_n_budgeting_variables()
-write.csv(summary_table_soil_n_budgets, "plots_tables/summary_table_soil_n_budgets_unnormalized.csv", row.names=F)
-
-
-
-#### 6.3 Generating CN ratios 
-source("programs/summary_tables/unnormalized/make_cn_ratio_summary_table.R")
-summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
-                                    p_pool=summary_table_pool)
-write.csv(summary_cn_ratios, "plots_tables/summary_cn_ratios.csv", row.names=F)
 
 
 

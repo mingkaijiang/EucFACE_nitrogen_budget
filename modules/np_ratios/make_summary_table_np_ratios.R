@@ -22,12 +22,14 @@ make_summary_table_np_ratios <- function() {
     ### soil
     outDF$soil <- soil_np_ratio$np_ratio
     
-    ### readily available nutrients
-    outDF$readily_available_soil <- readily_available_soil_np_ratio$np_ratio
-    
     ### microbe
     outDF$microbe <- microbial_np_ratio$np_ratio
     
+    ### readily available nutrients
+    outDF$readily_available_soil <- readily_available_soil_np_ratio$np_ratio
+    
 
-   write.csv(outDF, "plots_tables/summary_np_ratios.csv", row.names=F)
+    write.csv(outDF, "plots_tables/summary_np_ratios.csv", row.names=F)
+     
+     return(outDF)
 }

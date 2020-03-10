@@ -1,42 +1,42 @@
 make_total_n_budget <- function() {
     #### This function calculates all N budgeting variables
     ### out df
-    terms <- c("total standing p stock", 
-               "total p requirement", 
-               "total p retranslocated", 
-               "total p uptake from soil", 
-               "soil p mineralization",
-               "total uptake over requirement",
-               "p supply and uptake gap",
-               "total P MRT in plant", 
-               "total standing PUE",
-               "labile Pi stock")
+    terms <- c("Total plant N stock", 
+               "Total plant N requirement flux", 
+               "Total plant N retranslocation flux", 
+               "Plant N uptake flux", 
+               "Soil N mineralization flux",
+               "Soil N nitrification flux",
+               "Atmospheric N deposition flux",
+               "Plant N uptake over requirement",
+               "Plant N MRT", 
+               "Plant NUE")
     
-    out <- data.frame(terms, NA, NA, NA, NA, NA, NA, NA, NA, NA)
-    colnames(out) <- c("terms", "R1", "R2", "R3", "R4", "R5", "R6", "aCO2", "eCO2", "notes")
+    out <- data.frame(terms, NA, NA, NA, NA, NA, NA, NA, NA)
+    colnames(out) <- c("terms", "R1", "R2", "R3", "R4", "R5", "R6", "aCO2", "eCO2")
     
     ### assign values
-    out[out$terms == "total standing p stock", 2:7] <- round(total_standing_p_stock,2)
+    out[out$terms == "Total plant N stock", 2:7] <- round(vegetation_standing_n_stock$total,2)
     
-    out[out$terms == "total p requirement", 2:9] <- round(total_p_requirement_table[1,],2)
+    out[out$terms == "Total plant N requirement flux", 2:7] <- round(total_plant_n_fluxes$Total_plant_N_requirement_flux,2)
     
-    out[out$terms == "total p retranslocated", 2:9] <- round(total_p_retranslocation[1,],2)
+    out[out$terms == "Total plant N retranslocation flux", 2:7] <- round(total_plant_n_fluxes$Total_plant_retranslocation_N_flux,2)
     
-    out[out$terms == "total p uptake from soil", 2:9] <- round(total_p_uptake_from_soil[1,],2)
+    out[out$terms == "Plant N uptake flux", 2:7] <- round(total_plant_n_fluxes$Total_plant_uptake_N_flux,2)
     
-    out[out$terms == "soil p mineralization", 2:7] <- round(p_mineralization$p_mineralization,2)
-    out[out$terms == "soil p mineralization", 8] <- round(mean(p_mineralization$p_mineralization[p_mineralization$Ring%in%c(2,3,6)]),2)
-    out[out$terms == "soil p mineralization", 9] <- round(mean(p_mineralization$p_mineralization[p_mineralization$Ring%in%c(1,4,5)]),2)
+    out[out$terms == "Soil N mineralization flux", 2:7] <- round(summary_table_flux[summary_table_flux$terms=="Mineralization N flux",2:7],2)
+    
+    out[out$terms == "Soil N nitrification flux", 2:7] <- round(summary_table_flux[summary_table_flux$terms=="Nitrification N flux",2:7],2)
+    
+    out[out$terms == "Atmospheric N deposition flux", 2:7] <- round(summary_table_flux[summary_table_flux$terms=="Atmospheric deposition N flux",2:7],2)
+    
+    out[out$terms == "Plant N uptake over requirement", 2:7] <- round(total_plant_n_fluxes$Total_uptake_over_requirement_ratio,2)
+    
+    out[out$terms == "Plant N MRT", 2:7] <- round(plant_n_MRT$plant_N_MRT,2)
+    
+    out[out$terms == "Plant NUE", 2:7] <- round(plant_n_use_efficiency$NUE,2)
     
     
-    out[out$terms == "p supply and uptake gap", 2:9] <- round(out[out$terms == "total p uptake from soil", 2:9] - out[out$terms == "soil p mineralization", 2:9],2)
-    
-    out[out$terms == "total uptake over requirement", 2:9] <- round(p_uptake_over_requirement[1,], 2)
-    
-    out[out$terms == "total P MRT in plant", 2:9] <- round(P_mean_residence_time[1,1:8],2)
-    out[out$terms == "total standing PUE", 2:7] <- round(standing_pue[1:6, "NPP_by_PUP"],4)
-    
-    out[out$terms == "labile Pi stock", 2:7] <- round(summary_table_pool_by_treatment[summary_table_pool_by_treatment$terms=="Exchangeable Pi Pool", 2:7],2)
     
     ### aCO2 and eCO2 averages
     out$aCO2 <- round(rowMeans(data.frame(out$R2, out$R3, out$R6)), 4)
@@ -47,24 +47,8 @@ make_total_n_budget <- function() {
     out$aCO2_sd <- rowSds(as.matrix(subset(out, select=c(R2, R3, R6))), na.rm=T)
     out$eCO2_sd <- rowSds(as.matrix(subset(out, select=c(R1, R4, R5))), na.rm=T)
     
-    ### notes
-    out[out$terms == "total standing p stock", "notes"] <- "overstorey + understorey"
-    
-    out[out$terms == "total p requirement", "notes"] <- "NPP by P conc"
-    
-    out[out$terms == "total p retranslocated", "notes"] <- "guess value for understorey"
-    
-    out[out$terms == "total p uptake from soil", "notes"] <- "the diff between req and retrans"
-    
-    out[out$terms == "total uptake over requirement", "notes"] <- "uncertainty in wood and understorey"
-    
-    out[out$terms == "total P MRT in plant", "notes"] <- "standing stock / uptake"
-    
-    out[out$terms == "total standing PUE", "notes"] <- "NPP / uptake"
-    
-    out[out$terms == "labile Pi stock", "notes"] <- "Exchangeable Pi based on Hedley"
-    
-    write.csv(summary_table_total_n_budget, "plots_tables/summary_table_total_n_budget_unnormalized.csv", row.names=F)
+    ### save
+    write.csv(out, "plots_tables/total_n_budget_unnormalized.csv", row.names=F)
     
     
     return(out)
