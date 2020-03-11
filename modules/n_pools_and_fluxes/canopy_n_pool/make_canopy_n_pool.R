@@ -1,6 +1,7 @@
 #- Make the canopy N pool 
 make_canopy_n_pool <- function(n_conc,
-                               biom) {
+                               biom,
+                               c_frac) {
     ### return ring-specific canopy N data (mg/kg)
     ### n_conc: N concentration in %
     ### biom: canopy biomass pool (dry weight)
@@ -36,7 +37,7 @@ make_canopy_n_pool <- function(n_conc,
     
 
     ### calculate leaf N pool g N m-2
-    outDF$leaf_n_pool <- outDF$leaf_pool*outDF$PercN/100
+    outDF$leaf_n_pool <- outDF$leaf_pool/c_frac*outDF$PercN/100
     
     outDF <- outDF[,c("Date", "Ring", "leaf_n_pool")]
 

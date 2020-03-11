@@ -74,11 +74,10 @@ leaflitter_n_concentration <- make_leaflitter_n_concentration()
 
 #### 2.1 Canopy related variables (SLA, LAI, Canopy biomass)
 lai_variable <- make_lai_variable()
-lai_variable_smoothed <- make_smooth_lai_variable(timestep="1 day", kgam=15, return.option="dataframe")
 
 sla_variable <- make_sla_variable()
 
-canopy_biomass_pool <- make_canopy_biomass_pool(lai_variable, sla_variable, sla_option="variable")
+canopy_c_pool <- make_canopy_c_pool(lai_variable, sla_variable, sla_option="variable")
 
 #### 2.2 Litter production (leaf, twig, bark, seed)
 litter_c_production_flux <- make_litter_c_flux(c_fraction)
@@ -176,7 +175,8 @@ leaflitter_c_pool <- make_leaflitter_pool(c_fraction)
 ###### Nitrogen pools and fluxes
 ### Canopy N pool
 canopy_n_pool <- make_canopy_n_pool(n_conc=canopy_n_concentration,
-                                    biom=canopy_biomass_pool)
+                                    biom=canopy_c_pool,
+                                    c_frac=c_fraction)
 
 ### Canopy N production flux
 canopy_n_flux <- make_canopy_n_production(n_conc=canopy_n_concentration,
@@ -399,7 +399,6 @@ summary_table_concentration <- make_conc_summary_table()
 ### N pools by treatment and ring
 source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
 summary_table_pool <- make_pool_summary_table()
-# why canopy N pool is small relative to canopy P pool (i.e. NP ratio = 10)
 
 
 ### N fluxes by treatment and ring

@@ -1,4 +1,4 @@
-make_canopy_biomass_pool <- function(lai_variable, sla_variable, sla_option){
+make_canopy_c_pool <- function(lai_variable, sla_variable, sla_option){
     ### This function returns canopy biomass, not C biomass!
     
     if (sla_option == "mean") {

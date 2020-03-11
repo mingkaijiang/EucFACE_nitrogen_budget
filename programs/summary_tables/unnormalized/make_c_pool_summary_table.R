@@ -30,11 +30,11 @@ make_c_pool_summary_table <- function() {
     treatDF$notes <- rep(NA, length(treatDF$terms))
     
     ### Canopy C 
-    out <- summaryBy(leaf_pool~Ring,data=canopy_biomass_pool,FUN=mean,keep.names=T,na.rm=T)
+    out <- summaryBy(leaf_pool~Ring,data=canopy_c_pool,FUN=mean,keep.names=T,na.rm=T)
     treatDF[treatDF$terms == "Canopy C Pool", 2:7] <- out$leaf_pool
-    treatDF$year_start[treatDF$terms == "Canopy C Pool"] <- min(year(canopy_biomass_pool$Date))    
-    treatDF$year_end[treatDF$terms == "Canopy C Pool"] <- max(year(canopy_biomass_pool$Date))    
-    treatDF$timepoint[treatDF$terms == "Canopy C Pool"] <- length(unique(canopy_biomass_pool$Date))  
+    treatDF$year_start[treatDF$terms == "Canopy C Pool"] <- min(year(canopy_c_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Canopy C Pool"] <- max(year(canopy_c_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Canopy C Pool"] <- length(unique(canopy_c_pool$Date))  
     treatDF$notes[treatDF$terms == "Canopy C Pool"] <- "Estimated based on LAI and SLA"
 
     

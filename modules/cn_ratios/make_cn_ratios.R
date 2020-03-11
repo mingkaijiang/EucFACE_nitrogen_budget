@@ -4,7 +4,7 @@ make_cn_ratios <- function(c_pool, n_pool, c_flux, n_flux) {
     colnames(out) <- c("Ring", "canopy", "leaflitter", "understorey", "wood",
                        "fineroot", "frass", "soil", "microbe")
     
-    ### Compute CP ratio for major pools
+    ### Compute CN ratio for major pools
     out$canopy <- as.numeric(c_pool[c_pool$terms == "Canopy C Pool", 2:7]/n_pool[n_pool$terms == "Canopy N Pool",
                                                                                  2:7])
     
