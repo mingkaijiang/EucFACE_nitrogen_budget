@@ -179,7 +179,7 @@ make_n_budget_summary_plots <- function(inDF) {
                       position = position_dodge(0.9), width=0.2, size=0.4) +
         xlab("") + ylab(expression(paste("Plant N retranslocation (g N ", m^-2, " ", yr^-1, ")")))+
         theme_linedraw() +
-        ylim(0, 12)+
+        ylim(0, 20)+
         theme(panel.grid.minor=element_blank(),
               axis.title.x = element_text(size=10), 
               axis.text.x = element_text(size=10),
@@ -204,7 +204,7 @@ make_n_budget_summary_plots <- function(inDF) {
                       position = position_dodge(0.9), width=0.2, size=0.4) +
         xlab("") + ylab(expression(paste("Plant N uptake (g N ", m^-2, " ", yr^-1, ")")))+
         theme_linedraw() +
-        ylim(0, 10)+
+        ylim(0, 20)+
         theme(panel.grid.minor=element_blank(),
               axis.title.x = element_text(size=10), 
               axis.text.x = element_text(size=10),
