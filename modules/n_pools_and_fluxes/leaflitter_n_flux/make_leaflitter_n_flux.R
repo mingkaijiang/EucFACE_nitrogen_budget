@@ -6,7 +6,7 @@ make_leaflitter_n_flux <- function(n_conc,
     out <- c_flux
     
     ### average N concentration
-    n_avg <- summaryBy(PercN~Ring, data=p_conc, FUN=mean, keep.names=T, na.rm=T)
+    n_avg <- summaryBy(PercN~Ring, data=n_conc, FUN=mean, keep.names=T, na.rm=T)
     
     ### find the common month and year
     for (i in c(1:6)) {
