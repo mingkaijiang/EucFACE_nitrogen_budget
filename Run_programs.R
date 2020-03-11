@@ -495,15 +495,14 @@ total_n_budget <- make_total_n_budget()
 
 
 source("programs/plot_scripts/make_n_budget_summary_plots.R")
-make_summary_p_budget_plots(inDF=total_n_budget)
+make_n_budget_summary_plots(inDF=total_n_budget)
 
-### This is based on unnormalized data!
-source("programs/plot_scripts/make_summary_p_concentration_plots.R")
-make_summary_p_concentration_plots(inDF=summary_table_concentration_by_treatment)
+source("programs/plot_scripts/make_n_concentration_summary_plots.R")
+make_n_concentration_summary_plots(inDF=summary_table_concentration)
 
 
-source("programs/plot_scripts/make_summary_p_pools_plots.R")
-make_summary_p_pools_plots(inDF=summary_table_pool_by_treatment_normalized)
+source("programs/plot_scripts/make_n_pools_summary_plots.R")
+make_n_pools_summary_plots(inDF=summary_table_pool)
 
 
 source("programs/plot_scripts/make_summary_p_fluxes_plots.R")
