@@ -16,8 +16,8 @@ make_soil_n_pool <- function(n_conc, bk_density){
         n_conc[n_conc$Ring == i, "bk_kg_m3"] <- bk[bk$ring == i, "bulk_density_kg_m3"] 
     }
     
-    # calculate total N in top 30cm of soil (hence the * 0.3), unit kg m-2
-    n_conc$soil_n_kg_m2 <- n_conc$PercN * n_conc$bk_kg_m3 * 0.3 / 100
+    # calculate total N in top 10cm of soil (hence the * 0.1), unit kg m-2
+    n_conc$soil_n_kg_m2 <- n_conc$PercN * n_conc$bk_kg_m3 * 0.1 / 100
     
     # return in unit of g/m2
     n_conc$soil_n_g_m2 <-n_conc$soil_n_kg_m2 * 1000.0
