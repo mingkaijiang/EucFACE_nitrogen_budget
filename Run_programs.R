@@ -80,8 +80,6 @@ sla_variable <- make_sla_variable()
 
 canopy_biomass_pool <- make_canopy_biomass_pool(lai_variable, sla_variable, sla_option="variable")
 
-canopy_biomass_pool_smoothed <- make_canopy_biomass_pool_smooth_lai(lai_variable_smoothed, sla_variable)
-
 #### 2.2 Litter production (leaf, twig, bark, seed)
 litter_c_production_flux <- make_litter_c_flux(c_fraction)
 
@@ -94,11 +92,6 @@ seedlitter_c_production_flux <- litter_c_production_flux[,c("Date", "Ring", "see
 ## assume it's the same as litterfall C production
 canopy_c_production_flux <- leaflitter_c_production_flux
 
-## based on change in leaf area and litterfall
-## calculate change in leaf pool as well as litterfall
-dLEAF_litter_flux <- make_dLAI_litter(litter=leaflitter_c_production_flux, sla_variable=sla_variable)
-
-canopy_c_production_flux_new <- make_canopy_c_production_flux_new(inDF=dLEAF_litter_flux)
 
 #### 2.4 Wood C pool
 # year 2011-12 data on local directory
@@ -141,9 +134,6 @@ understorey_c_flux_2 <- make_understorey_aboveground_production_flux_2(c_fractio
 #### 2.10 understorey litter flux
 understorey_litter_c_flux <- make_understorey_litter_flux(c_fraction_ud)
 
-
-### estimate biomass growth based on cover data
-make_understorey_aboveground_growth_estimate(plotting = T)
 
 ### estimate % live and % dead
 understorey_live_percent <- make_understorey_percent_live_estimate()
@@ -194,7 +184,9 @@ canopy_n_flux <- make_canopy_n_production(n_conc=canopy_n_concentration,
                                           c_frac=c_fraction)
 
 ### leaflitter N flux
-leaflitter_n_flux <- make_leaflitter_n_flux(n_conc=leaflitter_n_concentration)
+leaflitter_n_flux <- make_leaflitter_n_flux(n_conc=leaflitter_n_concentration,
+                                            c_flux=leaflitter_c_production_flux,
+                                            c_frac=c_fraction)
 
 twig_litter_n_flux <- make_twiglitter_n_flux(n_conc=wood_n_concentration, litter_flux=twiglitter_c_production_flux)  
 bark_litter_n_flux <- make_barklitter_n_flux(n_conc=wood_n_concentration, litter_flux=barklitter_c_production_flux)  
