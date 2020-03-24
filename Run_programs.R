@@ -432,19 +432,19 @@ leaf_n_retrans_coefficient <- make_canopy_leaf_n_retranslocation_coefficient(df1
 
 ### understorey leaf n retranslocation coefficient
 ### assumed value
-understorey_n_retrans_coefficient <- make_understorey_n_retrans_coefficient(retrans=0.5)
+understorey_n_retrans_coefficient <- make_understorey_n_retrans_coefficient(retrans=0.3)
 
 ### fineroot retrans
 ### assumed value
-fineroot_n_retrans_coefficient <- make_fineroot_n_retrans_coefficient(retrans=0.5)
+fineroot_n_retrans_coefficient <- make_fineroot_n_retrans_coefficient(retrans=0.3)
 
 ### wood retrans
 ### assumed value
-wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.5)
+wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
 
 ### coarseroot retrans
 ### assumed value
-coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.5)
+coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
 
 
 ### 6.3 some summary variables
