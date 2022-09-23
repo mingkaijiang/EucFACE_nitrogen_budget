@@ -19,7 +19,9 @@ make_soil_inorganic_n_concentration <- function() {
     myDF3$date <- dmy(myDF3$date)
     
     # get only top 10 cm
-    myDF3 <- myDF3[which(myDF3$depth %in% " 0_10cm"),]
+    myDF3 <- myDF3[which(myDF3$depth %in% c(" 0_10cm", " 0-10cm")),]
+    
+    myDF3$depth <- "0_10"
     
     # read in Shun's data to expand the temporal coverages of the previous data
     myDF4 <- read.csv(file.path(getToPath(), 

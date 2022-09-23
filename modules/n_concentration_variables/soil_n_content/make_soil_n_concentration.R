@@ -28,23 +28,26 @@ make_soil_n_concentration <- function(){
     colnames(myDF4) <- c("Date", "SampleNumber", "ring", "plot", "depth", "pH", "gmc", "totC", "totN", "totP_ppm")
     colnames(myDF5) <- c("Date", "SampleNumber", "ring", "plot", "depth", "pH", "gmc", "totC", "totN", "totP_ppm")
     
-    myDF <- rbind(myDF2, myDF3, myDF4, myDF5)
+    myDF <- rbind(myDF2, rbind(myDF3, rbind(myDF4, myDF5)))
     myDF$Date <- dmy(myDF$Date)
     
+    myDF$depth <- gsub(" 0-10cm", "0_10", myDF$depth)
+    myDF$depth <- gsub("0-10cm", "0_10", myDF$depth)
+    myDF$depth <- gsub(" 10-20cm", "10_30", myDF$depth)
+    myDF$depth <- gsub("10-20cm", "10_30", myDF$depth)
+    myDF$depth <- gsub(" 20-30cm", "10_30", myDF$depth)
+    myDF$depth <- gsub("20-30cm", "10_30", myDF$depth)
+    
+    myDF <- myDF[,c("Date", "ring", "depth", "totN")]
+    colnames(myDF) <- c("Date", "Ring", "Depth", "PercN")
+    
     # average across depths first, unit: %
-    myDF2 <- summaryBy(totN~Date+ring+plot,data=myDF,FUN=mean,keep.names=T,na.rm=T)
+    myDF.m <- summaryBy(PercN~Date+Ring+Depth,data=myDF,FUN=mean,keep.names=T,na.rm=T)
     
-    # then checking the mean, min or max across date and ring
-    myDF.m <- summaryBy(totN~Date+ring,data=myDF2,FUN=mean,keep.names=T,na.rm=T)
-    
-    
-    myDF.m$PercN <- as.numeric(myDF.m$totN)
+    myDF.m$PercN <- as.numeric(myDF.m$PercN)
     
     myDF.m <- myDF.m[complete.cases(myDF.m),]
-
-    myDF.out <- myDF.m[,c("Date", "ring", "PercN")]
-    colnames(myDF.out) <- c("Date", "Ring", "PercN")
     
-    return(myDF.out)
+    return(myDF.m)
     
 }

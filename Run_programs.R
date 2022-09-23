@@ -1,24 +1,26 @@
 ####################################################################################################################
 ##### ---------------------------------------------------------------------------------------------------------##### 
-#####                            Master script for EucFACE nitrogen Budget                                   #####
+#####                    Master script for data-model intercomparison of the EucFACE nitrogen Budget           #####
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ####################################################################################################################
 ####
 #### Written by: Mingkai Jiang (m.jiang@westernsydney.edu.au)
 #### 
 #### Code structure:
-#### 0. Preparing necessary scripts
-#### 1. Compute nitrogen concentrations for major pools and fluxes
-#### 2. Compute biomass pools
-#### 3. Generate N pools and fluxes
-#### 4. Generate P concentrations
-#### 5. Generate N:P ratios
-#### 6. Generate summary tables, based on unnormalized responses
-#### 7. Make plots, based on unnormalized responses
+#### A1. Preparing necessary scripts
+#### B1. Compute nitrogen concentrations for major pools and fluxes
+#### B2. Compute biomass pools
+#### B3. Generate N pools and fluxes
+#### B4. Generate P concentrations
+#### B5. Generate N:P ratios
+#### B6. Generate summary tables, based on unnormalized responses
+#### B7. Make plots, based on unnormalized responses
+#### C1. prepare model output
+#### D1. Merge data and model for comparison
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 0: Prepare the repository (clean and read in necessary packages)
+##### Step A: Prepare the repository (clean and read in necessary packages)
 #### clear wk space
 rm(list=ls(all=TRUE))
 
@@ -31,7 +33,12 @@ source("programs/prepare.R")
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-########################### Step 1. Nitrogen concentrations
+########################### Step B1. Nitrogen concentrations
+
+### soil bulk density - updated
+soil_bulk_density <- make_soil_bulk_density()
+
+
 ### Canopy N concentration
 canopy_n_concentration <- make_canopy_n_concentration()
 
@@ -45,10 +52,10 @@ fineroot_n_concentration <- make_fineroot_n_concentration()
 ### Frass N concentration
 frass_n_concentration <- make_frass_n_concentration()
 
-### Soil N concentration
+### Soil N concentration 0-10, 10-30
 soil_n_concentration <- make_soil_n_concentration()
 
-### Soil inorganic N concentration
+### Soil inorganic N concentration, 0-10, in NH4 and NO3
 soil_inorganic_n_concentration <- make_soil_inorganic_n_concentration()
 
 ### Understorey N concentration
@@ -64,19 +71,20 @@ leaflitter_n_concentration <- make_leaflitter_n_concentration()
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 2: preparing C related variables
+##### Step B2: preparing C related variables
 #### For all C pools, unit in g C m-2,
 #### For all C fluxes, output rate in unit of mg C m-2 d-1, and the period over which this rate applies
-#### Then assign the P concentration to C pools and fluxes. 
-#### Note: % P of total dry biomass should not be directly applied to C result, 
-#### as amount of C is not amount of dry weight !!!
+#### Then assign the N concentration to C pools and fluxes. 
+#### Note: % N of total dry biomass should NOT be directly applied to C result, 
+#### as the amount of C is not the amount of dry weight !!!
 
 
-#### 2.1 Canopy related variables (SLA, LAI, Canopy biomass)
 lai_variable <- make_lai_variable()
 
 sla_variable <- make_sla_variable()
 
+
+#### 2.1 Canopy related variables (SLA, LAI, Canopy biomass)
 canopy_c_pool <- make_canopy_c_pool(lai_variable, sla_variable, sla_option="variable")
 
 #### 2.2 Litter production (leaf, twig, bark, seed)
@@ -141,8 +149,7 @@ understorey_live_percent <- make_understorey_percent_live_estimate()
 frass_c_production_flux <- make_frass_c_production_flux()
 
 #### 2.12 Soil C content
-## Ring-specific bulk density
-soil_bulk_density <- make_soil_bulk_density()
+
 
 # return sum of all depths
 soil_c_pool <- make_soil_c_pool(soil_bulk_density)
@@ -171,7 +178,7 @@ leaflitter_c_pool <- make_leaflitter_pool(c_fraction)
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 3: Multiple pools and fluxes with concentration
+##### Step B3: Multiple pools and fluxes with concentration
 ###### Nitrogen pools and fluxes
 ### Canopy N pool
 canopy_n_pool <- make_canopy_n_pool(n_conc=canopy_n_concentration,
@@ -291,107 +298,107 @@ microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 4: Generate P concentrations
+##### Step B4: Generate P concentrations
 #### 1.1: Soil P concentrations 
-soil_p_concentration <- make_soil_p_concentration(func=mean)
-
-
-#### 1.2: Soil phosphate conc, this returns % of P, not % of PO4!
-#### Only top 10 cm!
-soil_phosphate_concentration <- make_soil_phosphate_concentration(func=mean)
-
-#### 1.3 Microbial P conc.
-#### Only top 10 cm!
-microbial_p_concentration <- make_microbial_p_concentration()
-
-
-#### 1.4 Canopy P conc.
-canopy_p_concentration <- make_canopy_p_concentration(func=mean)
-
-#### 1.5 Leaf litter P conc. 
-leaflitter_p_concentration <- make_leaflitter_p_concentration(func=mean)
-
-
-#### 1.6 Wood P conc. 
-wood_p_concentration <- make_wood_p_concentration(func=mean)
-
-
-#### 1.7 Frass P conc.
-frass_p_concentration <- make_frass_p_concentration(func=mean)
-
-
-#### 1.8 Fineroot P conc.
-fineroot_p_concentration <- make_fineroot_p_concentration(func=mean)
-
-
-#### 1.9 Understorey P conc.
-understorey_p_concentration <- make_understorey_p_concentration(func=mean)
-
-#### 1.10 Understorey litter P conc.
-understorey_litter_p_concentration <- make_understorey_litter_p_concentration(func=mean)
-
-
-#### 1.11 Understorey P retranslocation coefficient
-understorey_p_retranslocation_coefficient <- make_understorey_p_retranslocation()
-
-#### 1.12 Hedley fractionation dataset
-soil_hedley_p_concentration <- make_soil_hedley_p_concentration(func=mean)
-
-#### soil P pool and soil phosphate P pool
-soil_p_pool <- make_soil_p_pool(p_conc=soil_p_concentration,
-                                bk_density=soil_bulk_density)
-
-soil_phosphate_pool <- make_soil_phosphate_pool(p_conc=soil_phosphate_concentration,
-                                                bk_density=soil_bulk_density)
+#soil_p_concentration <- make_soil_p_concentration(func=mean)
+#
+#
+##### 1.2: Soil phosphate conc, this returns % of P, not % of PO4!
+##### Only top 10 cm!
+#soil_phosphate_concentration <- make_soil_phosphate_concentration(func=mean)
+#
+##### 1.3 Microbial P conc.
+##### Only top 10 cm!
+#microbial_p_concentration <- make_microbial_p_concentration()
+#
+#
+##### 1.4 Canopy P conc.
+#canopy_p_concentration <- make_canopy_p_concentration(func=mean)
+#
+##### 1.5 Leaf litter P conc. 
+#leaflitter_p_concentration <- make_leaflitter_p_concentration(func=mean)
+#
+#
+##### 1.6 Wood P conc. 
+#wood_p_concentration <- make_wood_p_concentration(func=mean)
+#
+#
+##### 1.7 Frass P conc.
+#frass_p_concentration <- make_frass_p_concentration(func=mean)
+#
+#
+##### 1.8 Fineroot P conc.
+#fineroot_p_concentration <- make_fineroot_p_concentration(func=mean)
+#
+#
+##### 1.9 Understorey P conc.
+#understorey_p_concentration <- make_understorey_p_concentration(func=mean)
+#
+##### 1.10 Understorey litter P conc.
+#understorey_litter_p_concentration <- make_understorey_litter_p_concentration(func=mean)
+#
+#
+##### 1.11 Understorey P retranslocation coefficient
+#understorey_p_retranslocation_coefficient <- make_understorey_p_retranslocation()
+#
+##### 1.12 Hedley fractionation dataset
+#soil_hedley_p_concentration <- make_soil_hedley_p_concentration(func=mean)
+#
+##### soil P pool and soil phosphate P pool
+#soil_p_pool <- make_soil_p_pool(p_conc=soil_p_concentration,
+#                                bk_density=soil_bulk_density)
+#
+#soil_phosphate_pool <- make_soil_phosphate_pool(p_conc=soil_phosphate_concentration,
+#                                                bk_density=soil_bulk_density)
 
 
 
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 5: Making NP ratios
+##### Step B5: Making NP ratios
 ### Canopy N:P ratio
-canopy_np_ratio <- make_canopy_np_ratios(n_conc=canopy_n_concentration,
-                                         p_conc=canopy_p_concentration)
-
-### leaflitter N:P ratio
-leaflitter_np_ratio <- make_leaflitter_np_ratios(n_conc=leaflitter_n_concentration,
-                                                 p_conc=leaflitter_p_concentration)
-
-### wood N:P ratio
-wood_np_ratio <- make_wood_np_ratios(n_conc=wood_n_concentration,
-                                     p_conc=wood_p_concentration)
-
-### fineroot N:P ratio
-fineroot_np_ratio <- make_fineroot_np_ratios(n_conc=fineroot_n_concentration,
-                                             p_conc=fineroot_p_concentration)
-
-
-### Frass N:P ratios
-frass_np_ratio <- make_frass_np_ratios(n_conc=frass_n_concentration,
-                                       p_conc=frass_p_concentration)
-
-### Understorey N:P ratios
-understorey_np_ratio <- make_understorey_np_ratios(n_conc=understorey_n_concentration,
-                                                   p_conc=understorey_p_concentration)
-
-
-### Soil N:P ratios
-soil_np_ratio <- make_soil_np_ratios(n_pool=soil_n_pool,
-                                     p_pool=soil_p_pool)
-
-### readily available N:P ratio (i.e. sum of nitrate and ammonium : phosphate-P)
-readily_available_soil_np_ratio <- make_readily_available_soil_np_ratios(n_pool=soil_inorganic_n_pool,
-                                                                         p_pool=soil_phosphate_pool)
-
-
-### microbes
-microbial_np_ratio <- make_microbial_np_ratios(n_conc=microbial_n_concentration,
-                                               p_conc=microbial_p_concentration)
-
+#canopy_np_ratio <- make_canopy_np_ratios(n_conc=canopy_n_concentration,
+#                                         p_conc=canopy_p_concentration)
+#
+#### leaflitter N:P ratio
+#leaflitter_np_ratio <- make_leaflitter_np_ratios(n_conc=leaflitter_n_concentration,
+#                                                 p_conc=leaflitter_p_concentration)
+#
+#### wood N:P ratio
+#wood_np_ratio <- make_wood_np_ratios(n_conc=wood_n_concentration,
+#                                     p_conc=wood_p_concentration)
+#
+#### fineroot N:P ratio
+#fineroot_np_ratio <- make_fineroot_np_ratios(n_conc=fineroot_n_concentration,
+#                                             p_conc=fineroot_p_concentration)
+#
+#
+#### Frass N:P ratios
+#frass_np_ratio <- make_frass_np_ratios(n_conc=frass_n_concentration,
+#                                       p_conc=frass_p_concentration)
+#
+#### Understorey N:P ratios
+#understorey_np_ratio <- make_understorey_np_ratios(n_conc=understorey_n_concentration,
+#                                                   p_conc=understorey_p_concentration)
+#
+#
+#### Soil N:P ratios
+#soil_np_ratio <- make_soil_np_ratios(n_pool=soil_n_pool,
+#                                     p_pool=soil_p_pool)
+#
+#### readily available N:P ratio (i.e. sum of nitrate and ammonium : phosphate-P)
+#readily_available_soil_np_ratio <- make_readily_available_soil_np_ratios(n_pool=soil_inorganic_n_pool,
+#                                                                         p_pool=soil_phosphate_pool)
+#
+#
+#### microbes
+#microbial_np_ratio <- make_microbial_np_ratios(n_conc=microbial_n_concentration,
+#                                               p_conc=microbial_p_concentration)
+#
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 6: Making N budgeting variables and tables, based on raw data
+##### Step B6: Making N budgeting variables and tables, based on raw data
 #### 6.1 Summary Tables
 source("programs/summary_tables/unnormalized/make_conc_summary_table.R")
 summary_table_concentration <- make_conc_summary_table()
@@ -420,7 +427,7 @@ summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
                                     n_flux=summary_table_flux)
 
 #### NP ratios
-summary_np_ratios <- make_summary_table_np_ratios()
+#summary_np_ratios <- make_summary_table_np_ratios()
 
 
 
@@ -477,7 +484,7 @@ total_n_budget <- make_total_n_budget()
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step 7. Make plots, based on unnormalized responses
+##### Step B7. Make plots, based on unnormalized responses
 ### for all these plotting scripts, need to open the function, then make plots within the function
 
 source("programs/plot_scripts/make_n_budget_summary_plots.R")

@@ -48,3 +48,4 @@ tokenfile.txt
 *.csv
 *.pdf
 *.dat
+*.rds
