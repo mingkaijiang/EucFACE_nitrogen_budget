@@ -6,6 +6,8 @@ make_fineroot_litter_n_flux <- function(n_conc,
     ### prepare output df
     out <- c_flux
     
+    n_conc <- n_conc[n_conc$Depth=="0_10",]
+    
     ### prepare out df dates
     out$s.diff <- difftime(out$Start_date, "2010-01-01", units="days")
     out$e.diff <- difftime(out$End_date, "2010-01-01", units="days")

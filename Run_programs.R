@@ -97,10 +97,10 @@ seedlitter_c_production_flux <- litter_c_production_flux[,c("Date", "Ring", "see
 
 ### herbivore leaf c consumption flux
 ### extrapolated based on frass weight, leaf area consumed and sla data
+frass_c_production_flux <- make_frass_c_production_flux()
+
 herbivory_leaf_consumption_flux <- make_herbivory_leaf_consumption_flux(sla=sla_variable, 
                                                                         frass_flux=frass_c_production_flux)
-
-frass_c_production_flux <- make_frass_c_production_flux()
 
 
 canopy_c_production_flux <- merge_litter_c_and_herbivory_loss(litter=leaflitter_c_production_flux,
@@ -164,9 +164,6 @@ soil_c_pool <- make_soil_c_pool(bk_density=soil_bulk_density)
 microbial_c_pool <- make_microbial_c_pool(soil_bulk_density)
 
 
-#### 2.14 Soil mycorrhizal production
-mycorrhizal_c_pool <- make_mycorrhizal_c_pool(microbial_c_pool)
-
 #### 2.15 Coarse root C pool 
 coarse_root_c_pool <- make_coarse_root_pool(c_fraction, fr_pool=fineroot_c_pool) 
 
@@ -215,7 +212,7 @@ wood_n_pool <- make_wood_n_pool(n_conc=wood_n_concentration,
 wood_n_production <- make_wood_n_production(n_conc=wood_n_concentration,
                                             c_flux=wood_c_production)
 
-### fineroot N pool
+### fineroot N pool， 0-10 and 10-30 and transition
 fineroot_n_pool <- make_fineroot_n_pool(n_conc=fineroot_n_concentration,
                                         c_pool=fineroot_c_pool)
 
@@ -269,6 +266,13 @@ understorey_litter_n_flux <- make_understorey_litter_n_flux(n_conc=understorey_n
 leaflitter_n_pool <- make_leaflitter_n_pool(n_conc=leaflitter_n_concentration,
                                             c_pool=leaflitter_c_pool,
                                             c_frac=c_fraction)
+
+
+
+
+### as of 23/09/2022
+
+
 
 ### Soil N pool
 soil_n_pool <- make_soil_n_pool(n_conc=soil_n_concentration,
