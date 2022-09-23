@@ -4,9 +4,9 @@ make_microbial_n_concentration <- function() {
     download_microbial_n_data()
 
     # download the data
-    df <- read.csv(file.path(getToPath(), 
-                             "FACE_P0014_RA_MicrobialBiomassCNP_L1_20120613-20151130.csv"))
-
+    #df <- read.csv(file.path(getToPath(), 
+    #                         "FACE_P0014_RA_MicrobialBiomassCNP_L1_20120613-20151130.csv"))
+    df <- read.csv("temp_files/FACE_P0014_RA_MicrobialBiomassCNP_L1_20120613-20151130_V2.csv")
     df$Nmic <- as.numeric(as.character(df$Nmic))
     df <- df[complete.cases(df$ring),]
     
@@ -24,6 +24,7 @@ make_microbial_n_concentration <- function() {
     
     df.out <- df.m[,c("date", "ring", "PercN")]
     colnames(df.out) <- c("Date", "Ring", "PercN")
+    df.out$Depth <- "0_10"
     
     return(df.out)
     

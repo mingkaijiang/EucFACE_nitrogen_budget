@@ -1,12 +1,12 @@
 #- Make the soil C pool
-make_soil_c_pool <- function(bk_density, return="shallow"){
-
+make_soil_c_pool <- function(bk_density){
+    
     ### download the data
     infile <- "FACE_P0014_ALL_BasicSoilProperties_L1_2012.csv"
     if(!file.exists(paste0("download/", infile))) {
         download_soil_p_data()
     }
-
+    
     ### read in data - soil property data
     myDF2 <- read.csv(file.path(getToPath(), 
                                 "FACE_P0014_ALL_BasicSoilProperties_L1_2012.csv"))
@@ -35,77 +35,138 @@ make_soil_c_pool <- function(bk_density, return="shallow"){
     
     ### get rid of spaces in the variable "Depth"
     myDF$depth <- as.character(myDF$depth)
-    myDF$depth <- factor(gsub(" ", "", myDF$depth, fixed = TRUE)) 
+    myDF$depth <- gsub(" ", "", myDF$depth, fixed = TRUE)
+    myDF$depth <- gsub("-", "_", myDF$depth, fixed = TRUE)
+    myDF$depth <- gsub("cm", "", myDF$depth, fixed = TRUE)
+    myDF$depth <- gsub("10_20", "10_30", myDF$depth, fixed = TRUE)
+    myDF$depth <- gsub("20_30", "10_30", myDF$depth, fixed = TRUE)
     
     ### note that all data in 2015 are missing. Remove them.
     myDF <- subset(myDF,Date<as.Date("2015-01-01"))
     
+    myDF <- myDF[,c("Date", "ring", "depth", "totC")]
+    colnames(myDF) <- c("Date", "Ring", "Depth", "totC")
+    
+    # update earlier datasets
+    myDF$Trt[myDF$Ring%in%c(1,4,5)] <- "eCO2"
+    myDF$Trt[myDF$Ring%in%c(2,3,6)] <- "aCO2"
+    
+    
+    ### we will need more recent soil C data in deeper depths
+    # read in the Oct 2018 Johanna data at deeper depths
+    tmpDF <- read.csv("temp_files/belowground_P_working_sheet.csv")
+    
+    tmpDF <- tmpDF[,c("Date", "Ring", "Depth", "SoilC")]
+    colnames(tmpDF) <- c("Date", "Ring", "Depth", "totC")
+    tmpDF$Date <- as.Date(tmpDF$Date, format="%d/%m/%y")
+    
+    ### assign treatment
+    tmpDF$Trt[tmpDF$Ring%in%c(1,4,5)] <- "eCO2"
+    tmpDF$Trt[tmpDF$Ring%in%c(2,3,6)] <- "aCO2"
+    
+    ### rbind and expand
+    totDF <- rbind(myDF, tmpDF)
+    totDF.avg <- summaryBy(totC~Trt+Date+Ring+Depth, data=totDF, 
+                           FUN=mean, keep.names=T, na.rm=T)
+    
+    exDF <- expand.grid("Date"=unique(totDF$Date), 
+                        "Ring"=unique(totDF$Ring),
+                        "Depth"=unique(totDF$Depth))
+    
+    exDF <- merge(exDF, totDF.avg, by=c("Date", "Ring", "Depth"),
+                  all.x=T)
+    
+    
+    ### assign treatment
+    exDF$Trt[exDF$Ring%in%c(1,4,5)] <- "eCO2"
+    exDF$Trt[exDF$Ring%in%c(2,3,6)] <- "aCO2"
+    
+    
+    ###calculate trt-averaged depth reduction
+    #mpDF2 <- summaryBy(totC~Depth+Trt, FUN=mean, data=tmpDF, keep.names=T)
+    
+    #mpDF2$Red[tmpDF2$Trt=="aCO2"&tmpDF2$Depth=="10_30"] <- tmpDF2$totC[tmpDF2$Trt=="aCO2"&tmpDF2$Depth=="10_30"]/tmpDF2$totC[tmpDF2$Trt=="aCO2"&tmpDF2$Depth=="0_10"]
+    #mpDF2$Red[tmpDF2$Trt=="eCO2"&tmpDF2$Depth=="10_30"] <- tmpDF2$totC[tmpDF2$Trt=="eCO2"&tmpDF2$Depth=="10_30"]/tmpDF2$totC[tmpDF2$Trt=="eCO2"&tmpDF2$Depth=="0_10"]
+    
+    #mpDF2$Red[tmpDF2$Trt=="aCO2"&tmpDF2$Depth=="transition"] <- tmpDF2$totC[tmpDF2$Trt=="aCO2"&tmpDF2$Depth=="transition"]/tmpDF2$totC[tmpDF2$Trt=="aCO2"&tmpDF2$Depth=="0_10"]
+    #mpDF2$Red[tmpDF2$Trt=="eCO2"&tmpDF2$Depth=="transition"] <- tmpDF2$totC[tmpDF2$Trt=="eCO2"&tmpDF2$Depth=="transition"]/tmpDF2$totC[tmpDF2$Trt=="eCO2"&tmpDF2$Depth=="0_10"]
+    
+    
+    tmpDF2 <- summaryBy(totC~Depth+Ring, FUN=mean, data=tmpDF, keep.names=T)
+    
+    for (i in 1:6) {
+        tmpDF2$Red[tmpDF2$Ring==i&tmpDF2$Depth=="10_30"] <- tmpDF2$totC[tmpDF2$Ring==i&tmpDF2$Depth=="10_30"]/tmpDF2$totC[tmpDF2$Ring==i&tmpDF2$Depth=="0_10"]
+        tmpDF2$Red[tmpDF2$Ring==i&tmpDF2$Depth=="transition"] <- tmpDF2$totC[tmpDF2$Ring==i&tmpDF2$Depth=="transition"]/tmpDF2$totC[tmpDF2$Ring==i&tmpDF2$Depth=="0_10"]
+        
+    }
+    
+    outDF <- c()
+    
+    #for (i in unique(exDF$Date)) {
+    #    for (j in c("aCO2", "eCO2")) {
+    #        
+    #        subDF1 <- subset(exDF, Date==i & Trt==j)
+    #        
+    #        subDF1$totC[subDF1$Depth=="10_30"&subDF1$Date==i&subDF1$Trt==j] <- ifelse(is.na(subDF1$totC[subDF1$Depth=="10_30"&subDF1$Date==i&subDF1$Trt==j]),
+    #                                                                                  subDF1$totC[subDF1$Depth=="0_10"&subDF1$Date==i&subDF1$Trt==j]*tmpDF2$Red[tmpDF2$Trt==j&tmpDF2$Depth=="10_30"],
+    #                                                                                  subDF1$totC[subDF1$Depth=="10_30"&subDF1$Date==i&subDF1$Trt==j])
+    #        
+    #        
+    #        subDF1$totC[subDF1$Depth=="transition"&subDF1$Date==i&subDF1$Trt==j] <- ifelse(is.na(subDF1$totC[subDF1$Depth=="transition"&subDF1$Date==i&subDF1$Trt==j]),
+    #                                                                                  subDF1$totC[subDF1$Depth=="0_10"&subDF1$Date==i&subDF1$Trt==j]*tmpDF2$Red[tmpDF2$Trt==j&tmpDF2$Depth=="transition"],
+    #                                                                                  subDF1$totC[subDF1$Depth=="transition"&subDF1$Date==i&subDF1$Trt==j])
+    #    
+    #        
+    #        outDF <- rbind(outDF, subDF1)
+    #        
+    #    }
+    #}
+    
+    
+    for (i in unique(exDF$Date)) {
+        for (j in c(1:6)) {
+            
+            subDF1 <- subset(exDF, Date==i & Ring==j)
+            
+            subDF1$totC[subDF1$Depth=="10_30"&subDF1$Date==i&subDF1$Ring==j] <- ifelse(is.na(subDF1$totC[subDF1$Depth=="10_30"&subDF1$Date==i&subDF1$Ring==j]),
+                                                                                       subDF1$totC[subDF1$Depth=="0_10"&subDF1$Date==i&subDF1$Ring==j]*tmpDF2$Red[tmpDF2$Ring==j&tmpDF2$Depth=="10_30"],
+                                                                                       subDF1$totC[subDF1$Depth=="10_30"&subDF1$Date==i&subDF1$Ring==j])
+            
+            
+            subDF1$totC[subDF1$Depth=="transition"&subDF1$Date==i&subDF1$Ring==j] <- ifelse(is.na(subDF1$totC[subDF1$Depth=="transition"&subDF1$Date==i&subDF1$Ring==j]),
+                                                                                            subDF1$totC[subDF1$Depth=="0_10"&subDF1$Date==i&subDF1$Ring==j]*tmpDF2$Red[tmpDF2$Ring==j&tmpDF2$Depth=="transition"],
+                                                                                            subDF1$totC[subDF1$Depth=="transition"&subDF1$Date==i&subDF1$Ring==j])
+            
+            
+            outDF <- rbind(outDF, subDF1)
+            
+        }
+    }
+    
+    outDF <- outDF[complete.cases(outDF$totC),]
+    
+    
+    
     ### merge soil C with bulk density
-    mydat <- merge(myDF,bk_density,by.x=c("depth", "ring"), by.y=c("Depth", "ring"))
-
+    mydat <- merge(outDF,bk_density,by.x=c("Depth", "Ring"), by.y=c("Depth", "Ring"))
+    
     
     ### calculate soil C content of each layer. Units of g C m-2 for each 10-cm long depth increment
     ###  Note that the 10-20cm and 20-30cm layers were only measured on 3 of the 15 dates.
     ###   These deeper layers have less C than the 0-10cm layer.
-    mydat$totC_g_m2 <- with(mydat,totC/100*bulk_density_kg_m3*0.1*1000) # convert to gC m-2
-    
-    ### get averages for the deeper depths
-    dat.m.deep <- summaryBy(totC_g_m2~ring+plot+depth,data=mydat,FUN=mean,keep.names=T,na.rm=T)
-    
-    ### set up an empty dataframe with all potential levels of Date, Plot, Ring, and Depth in "dat"
-    dat.empty <- expand.grid(depth=levels(mydat$depth),plot=levels(as.factor(mydat$plot)),
-                             ring=levels(as.factor(mydat$ring)),Date=levels(as.factor(mydat$Date)))
-    mydat <- merge(mydat,dat.empty,by=c("depth","plot","ring","Date"),all.y=T)
-    
-    ### loop over the data, if deeper data are missing, gapfill with the average for that plot
-    naflag <- NA
-    for (i in 1:nrow(mydat)){
-        naflag <- is.na(mydat[i,"totC_g_m2"]) # is the datum missing?
-        if(naflag){
-            Depth_id <- mydat[i,"depth"]
-            Ring_id <- mydat[i,"ring"]
-            Plot_id <- mydat[i,"plot"]
-            
-            id <- which(dat.m.deep$depth==Depth_id & dat.m.deep$ring==Ring_id & dat.m.deep$plot==Plot_id)
-            mydat[i,"totC_g_m2"] <- dat.m.deep[id,"totC_g_m2"]
-        }
-    }
-    
-    #------
-    #- sum across layers on each date, if "return" is "all_depths"
-    if(return=="all_depths"){
-        dat.s <- summaryBy(totCgm2~Plot+Ring+Date,data=mydat,FUN=sum,keep.names=T)
-        names(dat.s)[4] <- "soil_carbon_pool"
-        #- average across plots within each ring
-        dat.s.m <- summaryBy(soil_carbon_pool~Date+Ring,data=dat.s,FUN=mean,keep.names=T)
-        dat.s.m$Ring <- as.numeric(dat.s.m$Ring)
-        
-    }
-    
-    #- return only the shallow layer on each date, if "return" is "shallow"
-    if(return=="shallow"){
-        dat.s <- summaryBy(totC_g_m2~plot+ring+Date,data=subset(mydat,depth=="0-10cm"),FUN=sum,keep.names=T)
-        names(dat.s)[4] <- "soil_carbon_pool"
-        #- average across plots within each ring
-        dat.s.m <- summaryBy(soil_carbon_pool~Date+ring,data=dat.s,FUN=mean,keep.names=T)
-        dat.s.m$Ring <- as.numeric(dat.s.m$ring)
-        
-    }
-    
-    #- return by depth, ring, if "return" is "by_depths"
-    if(return=="by_depths"){
-        dat.s <- summaryBy(totCgm2~Plot+Ring+Date+Depth,data=mydat,FUN=sum,keep.names=T)
-        names(dat.s)[5] <- "soil_carbon_pool"
-        
-        
-        dat.s.m <- summaryBy(soil_carbon_pool~Date+Ring+Depth,data=dat.s,FUN=mean,keep.names=T)
-        dat.s.m$Ring <- as.numeric(dat.s.m$Ring)
-        
-        dat.s.m <- dat.s.m[,c("Date", "Ring", "soil_carbon_pool", "Depth")]
-        
-    }
+    ### convert to gC m-2
+    mydat$totC_g_m2 <- ifelse(mydat$Depth=="0_10", mydat$totC/100*mydat$bulk_density_kg_m3*0.1*1000,
+                              ifelse(mydat$Depth=="10_30", mydat$totC/100*mydat$bulk_density_kg_m3*0.2*1000,
+                                     ifelse(mydat$Depth=="transition", mydat$totC/100*mydat$bulk_density_kg_m3*0.3*1000, NA)))
     
     
-    return(dat.s.m)
+    outDF <- summaryBy(totC_g_m2~Date+Ring+Depth, data=mydat,
+                       FUN=mean, keep.names=T, na.rm=T)
+    
+    colnames(outDF) <- c("Date", "Ring", "Depth", "soil_carbon_pool")
+    
+    
+    
+    return(outDF)
     
 }

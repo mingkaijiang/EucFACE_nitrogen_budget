@@ -14,16 +14,15 @@ make_fineroot_n_concentration <- function(){
     ### convert date to character
     frp.1$date <- as.character(frp.1$date)
     frp.2$date <- as.character(frp.2$date)
-
-    ### averaging concentration across depth
-    ### asign weight by depth
-    frp.1$frp_10_30cm <- frp.2$X.N.30
-    frp.1$frp_0_30cm <- (frp.1$frp_10_30cm * 2/3) + (frp.1$X.N.0 * 1/3)
     
+    colnames(frp.1) <- colnames(frp.2) <- c("Ring", "Date", "PercN")
+    frp.1$Depth <- "0_10"
+    frp.2$Depth <- "10_30"
+    
+    frp <- rbind(frp.1, frp.2)
     
     ### format dataframe to return
-    frp.out <- frp.1[,c("date","Ring.ID","frp_0_30cm")]
-    names(frp.out) <- c("Date", "Ring", "PercN")
+    frp <- frp[,c("Ring", "Date", "Depth", "PercN")]
     
-    return(frp.out)
+    return(frp)
 }

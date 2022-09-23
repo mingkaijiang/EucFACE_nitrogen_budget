@@ -35,7 +35,7 @@ source("programs/prepare.R")
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ########################### Step B1. Nitrogen concentrations
 
-### soil bulk density - updated
+### soil bulk density - updated with 0-10, 10-30, transition
 soil_bulk_density <- make_soil_bulk_density()
 
 
@@ -46,7 +46,7 @@ canopy_n_concentration <- make_canopy_n_concentration()
 ### we do not know if this is the sapwood or heartwood N concentration!
 wood_n_concentration <- make_wood_n_concentration()
 
-### Fineroot N concentration
+### Fineroot N concentration, 0-10, 10-30
 fineroot_n_concentration <- make_fineroot_n_concentration()
 
 ### Frass N concentration
@@ -61,7 +61,7 @@ soil_inorganic_n_concentration <- make_soil_inorganic_n_concentration()
 ### Understorey N concentration
 understorey_n_concentration <- make_understorey_n_concentration()
 
-### microbial N concentration
+### microbial N concentration 0 - 10cm
 microbial_n_concentration <- make_microbial_n_concentration()
 
 ### leaflitter N concentration
@@ -74,9 +74,9 @@ leaflitter_n_concentration <- make_leaflitter_n_concentration()
 ##### Step B2: preparing C related variables
 #### For all C pools, unit in g C m-2,
 #### For all C fluxes, output rate in unit of mg C m-2 d-1, and the period over which this rate applies
-#### Then assign the N concentration to C pools and fluxes. 
-#### Note: % N of total dry biomass should NOT be directly applied to C result, 
-#### as the amount of C is not the amount of dry weight !!!
+
+
+### need to update all scripts following P budget example, check with 周展安
 
 
 lai_variable <- make_lai_variable()
@@ -95,9 +95,16 @@ twiglitter_c_production_flux <- litter_c_production_flux[,c("Date", "Ring", "twi
 barklitter_c_production_flux <- litter_c_production_flux[,c("Date", "Ring", "bark_flux", "Start_date", "End_date", "Days")]
 seedlitter_c_production_flux <- litter_c_production_flux[,c("Date", "Ring", "seed_flux", "Start_date", "End_date", "Days")]
 
-#### 2.3 Canopy C production
-## assume it's the same as litterfall C production
-canopy_c_production_flux <- leaflitter_c_production_flux
+### herbivore leaf c consumption flux
+### extrapolated based on frass weight, leaf area consumed and sla data
+herbivory_leaf_consumption_flux <- make_herbivory_leaf_consumption_flux(sla=sla_variable, 
+                                                                        frass_flux=frass_c_production_flux)
+
+frass_c_production_flux <- make_frass_c_production_flux()
+
+
+canopy_c_production_flux <- merge_litter_c_and_herbivory_loss(litter=leaflitter_c_production_flux,
+                                                              herbivory=herbivory_leaf_consumption_flux)
 
 
 #### 2.4 Wood C pool
@@ -122,44 +129,40 @@ wood_c_production <- make_wood_production_flux(wood_c_pool)
 standing_dead_c_flux <- make_standing_dead_c_flux(standing_dead_c_pool)
 
 #### 2.6 Fineroot pool
-fineroot_c_pool <- make_fineroot_c_pool()
+### include intermediate root size
+fineroot_c_pool <- make_fineroot_c_pool(back.calculate=T,
+                                        soil_bulk_density=soil_bulk_density,
+                                        root.size="intermediate")
 
 #### 2.7 Fineroot production
 fineroot_c_production_flux <- make_fineroot_c_production_flux()
 
 #### 2.8 Understorey aboveground biomass - 1: Varsha's clipping; 2: Matthias's stereo camera
-understorey_c_pool <- make_understorey_aboveground_c_pool(c_fraction_ud,
-                                                          strip_area)
+#understorey_c_pool <- make_understorey_aboveground_c_pool(c_fraction_ud,
+#                                                          strip_area)
 
-understorey_c_pool_2 <- make_understorey_aboveground_c_pool_2(c_fraction_ud)
+understorey_c_pool <- make_understorey_aboveground_c_pool_camera(c_frac=c_fraction_ud,
+                                                                 plot.option=T)
 
 #### 2.9 Understorey production flux - 1: Varsha's clipping; 2: Matthias's stereo camera
 understorey_c_flux <- make_understorey_aboveground_production_flux(c_fraction_ud)
 
-understorey_c_flux_2 <- make_understorey_aboveground_production_flux_2(c_fraction_ud)
+#understorey_c_flux_2 <- make_understorey_aboveground_production_flux_2(c_fraction_ud)
 
 #### 2.10 understorey litter flux
 understorey_litter_c_flux <- make_understorey_litter_flux(c_fraction_ud)
 
 
-### estimate % live and % dead
-understorey_live_percent <- make_understorey_percent_live_estimate()
-
-#### 2.11 Frass production
-frass_c_production_flux <- make_frass_c_production_flux()
-
 #### 2.12 Soil C content
 
 
 # return sum of all depths
-soil_c_pool <- make_soil_c_pool(soil_bulk_density)
+soil_c_pool <- make_soil_c_pool(bk_density=soil_bulk_density)
+
 
 #### 2.13 Microbial C pool
-# this pool has data only at 0-10cm depth - Cat's data
 microbial_c_pool <- make_microbial_c_pool(soil_bulk_density)
 
-### Yolima's data
-#microbial_c_pool2 <- make_microbial_pool2(soil_bulk_density)
 
 #### 2.14 Soil mycorrhizal production
 mycorrhizal_c_pool <- make_mycorrhizal_c_pool(microbial_c_pool)
@@ -179,6 +182,9 @@ leaflitter_c_pool <- make_leaflitter_pool(c_fraction)
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step B3: Multiple pools and fluxes with concentration
+#### Note: % N of total dry biomass should NOT be directly applied to C result, 
+#### as the amount of C is not the amount of dry weight !!!
+
 ###### Nitrogen pools and fluxes
 ### Canopy N pool
 canopy_n_pool <- make_canopy_n_pool(n_conc=canopy_n_concentration,
