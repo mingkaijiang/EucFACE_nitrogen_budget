@@ -267,18 +267,11 @@ leaflitter_n_pool <- make_leaflitter_n_pool(n_conc=leaflitter_n_concentration,
                                             c_pool=leaflitter_c_pool,
                                             c_frac=c_fraction)
 
-
-
-
-### as of 23/09/2022
-
-
-
-### Soil N pool
+### Soil N pool 0 - 30 cm
 soil_n_pool <- make_soil_n_pool(n_conc=soil_n_concentration,
                                 bk_density=soil_bulk_density)
 
-### Soil Inorganic N pool
+### Soil Inorganic N pool 0 - 10 cm
 ## there are 3 possible data estimates:
 ## IEM method
 ## extractable method
@@ -287,14 +280,13 @@ soil_n_pool <- make_soil_n_pool(n_conc=soil_n_concentration,
 soil_inorganic_n_pool <- make_soil_inorganic_n_pool(n_conc=soil_inorganic_n_concentration,
                                                     bk_density=soil_bulk_density)
 
-### Soil nitrification flux
+### Soil nitrification flux 0 - 10 cm
 soil_nitrification_n_flux <- make_soil_n_nitrification_flux(bk_density=soil_bulk_density)
 
-### Soil N mineralization flux
+### Soil N mineralization flux 0 - 10 cm
 soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bulk_density)
 
-### microbial N pool
-#### Top 10 cm
+### microbial N pool Top 10 cm
 microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
                                           bk_density=soil_bulk_density)
 
@@ -303,7 +295,6 @@ microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
 #soil_leaching_n_flux <- make_soil_leaching_n_flux()
 
 ### atmospheric N deposition flux
-### get a literature value for this
 #atmospheric_deposition_n_flux <- make_atmospheric_deposition_n_flux()
 
 

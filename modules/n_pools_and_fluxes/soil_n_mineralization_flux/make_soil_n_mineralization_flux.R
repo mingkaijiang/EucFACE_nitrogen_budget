@@ -21,11 +21,11 @@ make_soil_n_mineralization_flux <- function(bk_density) {
     
 
     # obtain ring averaged soil bulk density (0 - 10 cm only)
-    bk_density <- subset(bk_density, Depth == "0-10cm")
+    bk_density <- subset(bk_density, Depth == "0_10")
     
     # add bulk density
     for (i in 1:6){
-        myDF.m[myDF.m$ring == i, "bk_density"] <- bk_density[bk_density$ring == i, "bulk_density_kg_m3"] 
+        myDF.m[myDF.m$ring == i, "bk_density"] <- bk_density[bk_density$Ring == i, "bulk_density_kg_m3"] 
     }
     
     # from mg kg-1 d-1 to mg m-2 d-1

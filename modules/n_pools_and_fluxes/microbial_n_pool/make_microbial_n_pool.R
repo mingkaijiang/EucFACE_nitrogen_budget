@@ -2,10 +2,10 @@ make_microbial_n_pool <- function(n_conc, bk_density){
     
     # return depth-averaged bulk density values
     #bk.r<-with(bk_density, tapply(bulk_density_kg_m3, ring, mean))
-    bk <- subset(bk_density, Depth == "0-10cm")
+    bk <- subset(bk_density, Depth == "0_10")
     
     for (i in 1:6) {
-        n_conc[n_conc$Ring == i, "bk_density"] <- bk[bk$ring == i, "bulk_density_kg_m3"] 
+        n_conc[n_conc$Ring == i, "bk_density"] <- bk[bk$Ring == i, "bulk_density_kg_m3"] 
     }
     
     # calculate total n in top 10cm of soil (hence the * 0.1), unit kg m-2
