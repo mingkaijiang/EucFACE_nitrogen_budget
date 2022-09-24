@@ -74,3 +74,10 @@ n.mod.list <- c("GDAYN", "LPJGN")
 
 
 
+
+
+scenario="VAR"
+make_time_averaged_data_model_comparison_over_obs_period(eucDF,
+                                                         scenario="VAR")
+
+

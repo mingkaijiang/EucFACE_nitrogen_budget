@@ -70,6 +70,29 @@ leaflitter_n_concentration <- make_leaflitter_n_concentration()
 ### understorey N concentration - no data available
 
 
+
+
+########################### Step B2. Retranslocation coefficients
+### retranslocation coefficients
+leaf_n_retrans_coefficient <- make_canopy_leaf_n_retranslocation_coefficient(df1=canopy_n_concentration,
+                                                                             df2=leaflitter_n_concentration)
+
+### understorey leaf n retranslocation coefficient
+### assumed value
+understorey_n_retrans_coefficient <- make_understorey_n_retrans_coefficient(retrans=0.3)
+
+### fineroot retrans
+### assumed value
+fineroot_n_retrans_coefficient <- make_fineroot_n_retrans_coefficient(retrans=0.3)
+
+### wood retrans
+### assumed value
+wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
+
+### coarseroot retrans
+### assumed value
+coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
+
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step B2: preparing C related variables
 #### For all C pools, unit in g C m-2,
@@ -188,62 +211,21 @@ canopy_n_pool <- make_canopy_n_pool(n_conc=canopy_n_concentration,
                                     biom=canopy_c_pool,
                                     c_frac=c_fraction)
 
-### Canopy N production flux
-canopy_n_flux <- make_canopy_n_production(n_conc=canopy_n_concentration,
-                                          c_flux=canopy_c_production_flux,
-                                          c_frac=c_fraction)
-
-### leaflitter N flux
-leaflitter_n_flux <- make_leaflitter_n_flux(n_conc=leaflitter_n_concentration,
-                                            c_flux=leaflitter_c_production_flux,
-                                            c_frac=c_fraction)
-
-twig_litter_n_flux <- make_twiglitter_n_flux(n_conc=wood_n_concentration, litter_flux=twiglitter_c_production_flux)  
-bark_litter_n_flux <- make_barklitter_n_flux(n_conc=wood_n_concentration, litter_flux=barklitter_c_production_flux)  
-seed_litter_n_flux <- make_seedlitter_n_flux(n_conc=wood_n_concentration, litter_flux=seedlitter_c_production_flux)  
-
 
 ### wood N pool
 wood_n_pool <- make_wood_n_pool(n_conc=wood_n_concentration,
                                 c_pool=wood_c_pool,
-                                case_consideration="total")
+                                n_retrans=wood_n_retrans_coefficient)
 
-### wood N production
-wood_n_production <- make_wood_n_production(n_conc=wood_n_concentration,
-                                            c_flux=wood_c_production)
 
 ### fineroot N pool， 0-10 and 10-30 and transition
 fineroot_n_pool <- make_fineroot_n_pool(n_conc=fineroot_n_concentration,
                                         c_pool=fineroot_c_pool)
 
-
-### fineroot N production
-fineroot_n_production <- make_fineroot_n_production(n_conc=fineroot_n_concentration,
-                                                    c_flux=fineroot_c_production_flux)
-
-### fineroot litter N flux
-### assuming N retranslocation coefficient for fine root is 50%
-### and fine root c production flux is fine root c litter flux
-fineroot_litter_n_flux <- make_fineroot_litter_n_flux(n_conc=fineroot_n_concentration,
-                                                      c_flux=fineroot_c_production_flux,
-                                                      n_retrans=0.5)
-
-
 ### coarseroot N pool
 coarseroot_n_pool <- make_coarseroot_n_pool(n_conc=wood_n_concentration,
                                             c_pool=coarse_root_c_pool,
                                             case_consideration="total")
-
-### coarseroot N production
-coarseroot_n_production <- make_coarseroot_n_production(n_conc=wood_n_concentration,
-                                                        c_flux=coarse_root_c_flux)
-
-
-### Frass N production
-frass_c_fraction <- make_frass_c_fraction()
-frass_n_production <- make_frass_n_production_flux(n_conc=frass_n_concentration,
-                                                   c_flux=frass_c_production_flux,
-                                                   c_frac=frass_c_fraction)
 
 ### Understorey N pool
 understorey_n_pool <- make_understorey_n_pool(n_conc=understorey_n_concentration,
@@ -251,16 +233,6 @@ understorey_n_pool <- make_understorey_n_pool(n_conc=understorey_n_concentration
                                               c_frac=c_fraction_ud,
                                               live_or_total = "Live")
 
-### Understorey N flux
-understorey_n_flux <- make_understorey_n_flux(n_conc=understorey_n_concentration,
-                                              c_flux=understorey_c_flux,
-                                              c_frac=c_fraction_ud)
-
-### Understorey litter N flux
-### no data
-understorey_litter_n_flux <- make_understorey_litter_n_flux(n_conc=understorey_n_concentration,
-                                                      c_flux=understorey_c_flux,
-                                                      n_retrans=0.5)
 
 ### leaflitter N pool
 leaflitter_n_pool <- make_leaflitter_n_pool(n_conc=leaflitter_n_concentration,
@@ -280,15 +252,87 @@ soil_n_pool <- make_soil_n_pool(n_conc=soil_n_concentration,
 soil_inorganic_n_pool <- make_soil_inorganic_n_pool(n_conc=soil_inorganic_n_concentration,
                                                     bk_density=soil_bulk_density)
 
+
+### microbial N pool Top 10 cm
+microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
+                                          bk_density=soil_bulk_density)
+
+
+
+
+
+### Canopy N production flux
+canopy_n_flux <- make_canopy_n_production(n_conc=canopy_n_concentration,
+                                          c_flux=canopy_c_production_flux,
+                                          c_frac=c_fraction)
+
+### leaflitter N flux
+leaflitter_n_flux <- make_leaflitter_n_flux(n_conc=leaflitter_n_concentration,
+                                            c_flux=leaflitter_c_production_flux,
+                                            c_frac=c_fraction)
+
+twig_litter_n_flux <- make_twiglitter_n_flux(n_conc=wood_n_concentration, 
+                                             litter_flux=twiglitter_c_production_flux)  
+
+bark_litter_n_flux <- make_barklitter_n_flux(n_conc=wood_n_concentration, 
+                                             litter_flux=barklitter_c_production_flux)  
+
+seed_litter_n_flux <- make_seedlitter_n_flux(n_conc=wood_n_concentration, 
+                                             litter_flux=seedlitter_c_production_flux)  
+
+
+canopy_n_retranslocation_flux <- calculate_canopy_n_retranslocation_flux(tflux=canopy_n_flux,
+                                                                         lflux=leaflitter_n_flux,
+                                                                         retransDF=leaf_n_retrans_coefficient)
+
+### wood N production
+wood_n_production <- make_wood_n_production(n_conc=wood_n_concentration,
+                                            c_flux=wood_c_production)
+
+### fineroot N production
+fineroot_n_production <- make_fineroot_n_production(n_conc=fineroot_n_concentration,
+                                                    c_flux=fineroot_c_production_flux)
+
+### fineroot litter N flux
+### and fine root c production flux is fine root c litter flux
+fineroot_litter_n_flux <- make_fineroot_litter_n_flux(n_conc=fineroot_n_concentration,
+                                                      c_flux=fineroot_c_production_flux,
+                                                      n_retrans=fineroot_n_retrans_coefficient)
+
+
+
+### coarseroot N production
+coarseroot_n_production <- make_coarseroot_n_production(n_conc=wood_n_concentration,
+                                                        c_flux=coarse_root_c_flux)
+
+
+### Frass N production
+frass_c_fraction <- make_frass_c_fraction()
+frass_n_production <- make_frass_n_production_flux(n_conc=frass_n_concentration,
+                                                   c_flux=frass_c_production_flux,
+                                                   c_frac=frass_c_fraction)
+
+
+### Understorey N flux
+understorey_n_flux <- make_understorey_n_flux(n_conc=understorey_n_concentration,
+                                              c_flux=understorey_c_flux,
+                                              c_frac=c_fraction_ud)
+
+
+
 ### Soil nitrification flux 0 - 10 cm
 soil_nitrification_n_flux <- make_soil_n_nitrification_flux(bk_density=soil_bulk_density)
 
 ### Soil N mineralization flux 0 - 10 cm
 soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bulk_density)
 
-### microbial N pool Top 10 cm
-microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
-                                          bk_density=soil_bulk_density)
+
+
+
+
+understorey_litter_n_flux <- make_understorey_litter_n_flux(n_conc=understorey_n_concentration,
+                                                            c_flux=understorey_c_flux,
+                                                            n_retrans=0.5)
 
 
 ### leaching flux
@@ -401,10 +445,12 @@ microbial_n_pool <- make_microbial_n_pool(n_conc=microbial_n_concentration,
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step B6: Making N budgeting variables and tables, based on raw data
 #### 6.1 Summary Tables
+### to add: NO3, NH4, soil N of different layers
 source("programs/summary_tables/unnormalized/make_conc_summary_table.R")
 summary_table_concentration <- make_conc_summary_table()
 
 ### N pools by treatment and ring
+### to add: NO3, NH4, soil N of different layers
 source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
 summary_table_pool <- make_pool_summary_table()
 
@@ -422,37 +468,14 @@ source("programs/summary_tables/unnormalized/make_c_flux_summary_table.R")
 summary_table_c_flux <- make_c_flux_summary_table()
 
 #### CN ratios 
-summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
-                                    n_pool=summary_table_pool,
-                                    c_flux=summary_table_c_flux,
-                                    n_flux=summary_table_flux)
+#summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
+#                                    n_pool=summary_table_pool,
+#                                    c_flux=summary_table_c_flux,
+#                                    n_flux=summary_table_flux)
 
 #### NP ratios
 #summary_np_ratios <- make_summary_table_np_ratios()
 
-
-
-
-### 6.2 retranslocation coefficients
-### canopy leaf n retranslocation coefficient
-leaf_n_retrans_coefficient <- make_canopy_leaf_n_retranslocation_coefficient(df1=canopy_n_concentration,
-                                                                             df2=leaflitter_n_concentration)
-
-### understorey leaf n retranslocation coefficient
-### assumed value
-understorey_n_retrans_coefficient <- make_understorey_n_retrans_coefficient(retrans=0.3)
-
-### fineroot retrans
-### assumed value
-fineroot_n_retrans_coefficient <- make_fineroot_n_retrans_coefficient(retrans=0.3)
-
-### wood retrans
-### assumed value
-wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
-
-### coarseroot retrans
-### assumed value
-coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
 
 
 ### 6.3 some summary variables

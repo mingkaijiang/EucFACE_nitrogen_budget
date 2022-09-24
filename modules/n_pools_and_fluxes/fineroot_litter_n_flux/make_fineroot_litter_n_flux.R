@@ -4,7 +4,7 @@ make_fineroot_litter_n_flux <- function(n_conc,
                                         n_retrans){
     
     ### prepare output df
-    out <- c_flux
+    out <- merge(c_flux, n_retrans, by="Ring")
     
     n_conc <- n_conc[n_conc$Depth=="0_10",]
     
@@ -28,7 +28,7 @@ make_fineroot_litter_n_flux <- function(n_conc,
         }
     }
     
-    out$PercN <- out$PercN * (1 - n_retrans)
+    out$PercN <- out$PercN * (1 - out$retrans_coef)
     
     outDF <- out[complete.cases(out),]
     
