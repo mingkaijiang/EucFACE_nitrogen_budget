@@ -458,7 +458,6 @@ soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bu
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step B6: Making N budgeting variables and tables, based on raw data
 #### 6.1 Summary Tables
-source("programs/summary_tables/unnormalized/make_conc_summary_table.R")
 summary_table_concentration <- make_conc_summary_table(canopy_n_concentration=canopy_n_concentration,
                                                        wood_n_concentration=wood_n_concentration,
                                                        fineroot_n_concentration=fineroot_n_concentration,
@@ -471,8 +470,6 @@ summary_table_concentration <- make_conc_summary_table(canopy_n_concentration=ca
 
 
 ### N pools by treatment and ring
-### to add: NO3, NH4, soil N of different layers
-source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
 summary_table_pool <- make_pool_summary_table(canopy_n_pool=canopy_n_pool,
                                               wood_n_pool=wood_n_pool,
                                               fineroot_n_pool=fineroot_n_pool,
@@ -485,16 +482,51 @@ summary_table_pool <- make_pool_summary_table(canopy_n_pool=canopy_n_pool,
 
 
 ### N fluxes by treatment and ring
-source("programs/summary_tables/unnormalized/make_flux_summary_table.R")
-summary_table_flux <- make_flux_summary_table()
+summary_table_flux <- make_flux_summary_table(soil_mineralization_n_flux=soil_mineralization_n_flux,
+                                              soil_nitrification_n_flux=soil_nitrification_n_flux,
+                                              canopy_n_flux=canopy_n_flux,
+                                              wood_n_production=wood_n_production,
+                                              fineroot_n_production=fineroot_n_production,
+                                              coarseroot_n_production=coarseroot_n_production,
+                                              canopy_n_retranslocation_flux=canopy_n_retranslocation_flux,
+                                              sapwood_n_retranslocation_flux=sapwood_n_retranslocation_flux,
+                                              fineroot_n_retranslocation_flux=fineroot_n_retranslocation_flux,
+                                              understorey_n_retranslocation_flux=understorey_n_retranslocation_flux,
+                                              leaflitter_n_flux=leaflitter_n_flux,
+                                              bark_litter_n_flux=bark_litter_n_flux,
+                                              seed_litter_n_flux=seed_litter_n_flux,
+                                              twig_litter_n_flux=twig_litter_n_flux,
+                                              fineroot_litter_n_flux=fineroot_litter_n_flux,
+                                              # atmospheric_n_deposition=atmospheric_n_deposition,
+                                              # leaching_n_flux=leaching_n_flux,
+                                              understorey_n_flux=understorey_n_flux,
+                                              understorey_litter_n_flux=understorey_litter_n_flux)
+
+
 
 ### C pools by treatment and ring
-source("programs/summary_tables/unnormalized/make_c_pool_summary_table.R")
-summary_table_c_pool <- make_c_pool_summary_table()
+summary_table_c_pool <- make_c_pool_summary_table(norm="unnormalized",
+                                                  canopy_c_pool=canopy_c_pool,
+                                                  wood_c_pool=wood_c_pool,
+                                                  fineroot_c_pool=fineroot_c_pool,
+                                                  coarse_root_c_pool=coarse_root_c_pool,
+                                                  understorey_c_pool=understorey_c_pool,
+                                                  soil_c_pool=soil_c_pool,
+                                                  microbial_c_pool=microbial_c_pool,
+                                                  leaflitter_c_pool=leaflitter_c_pool)
 
 ### C fluxes by treatment and ring
-source("programs/summary_tables/unnormalized/make_c_flux_summary_table.R")
-summary_table_c_flux <- make_c_flux_summary_table()
+summary_table_c_flux <- make_c_flux_summary_table(norm="unnormalized",
+                                                  leaflitter_c_production_flux=leaflitter_c_production_flux,
+                                                  twiglitter_c_production_flux=twiglitter_c_production_flux,
+                                                  barklitter_c_production_flux=barklitter_c_production_flux,
+                                                  seedlitter_c_production_flux=seedlitter_c_production_flux,
+                                                  canopy_c_production_flux=canopy_c_production_flux,
+                                                  wood_c_production=wood_c_production,
+                                                  fineroot_c_production_flux=fineroot_c_production_flux,
+                                                  coarse_root_c_flux=coarse_root_c_flux,
+                                                  understorey_c_flux=understorey_c_flux,
+                                                  frass_c_production_flux=frass_c_production_flux)
 
 #### CN ratios 
 #summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,

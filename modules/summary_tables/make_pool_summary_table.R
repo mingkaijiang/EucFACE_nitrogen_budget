@@ -3,13 +3,31 @@
 #### Ignore time but produce time coverage information
 #### This is for pools
 
-make_pool_summary_table <- function() {
+make_pool_summary_table <- function(canopy_n_pool,
+                                    wood_n_pool,
+                                    fineroot_n_pool,
+                                    coarseroot_n_pool,
+                                    leaflitter_n_pool,
+                                    understorey_n_pool,
+                                    soil_n_pool,
+                                    soil_inorganic_n_pool,
+                                    microbial_n_pool) {
     
     ### Define pool variable names
-    terms <- c("Canopy N Pool", "Wood N Pool", "Coarse Root N Pool", "Fine Root N Pool",
-               "Understorey N Pool", "Canopy Litter N Pool",
-               "Microbial N Pool", 
-               "Soil N Pool")
+    terms <- c("Canopy N Pool", 
+               "Wood N Pool", 
+               "Sapwood N Pool", 
+               "Heartwood N Pool",
+               "Coarse Root N Pool", 
+               "Fine Root N Pool",
+               "Understorey N Pool", 
+               "Canopy Litter N Pool",
+               "Microbial N Pool 0-10cm", 
+               "Soil N Pool 0-10cm",
+               "Soil N Pool 10-30cm",
+               "Soil Inorg N Pool 0-10cm",
+               "Soil NO3-N Pool 0-10cm",
+               "Soil NH4-N Pool 0-10cm")
     
     treatDF <- data.frame(terms)
     treatDF$R1 <- rep(NA, length(treatDF$terms))
@@ -51,7 +69,22 @@ make_pool_summary_table <- function() {
     treatDF$year_start[treatDF$terms == "Wood N Pool"] <- min(year(wood_n_pool$Date))    
     treatDF$year_end[treatDF$terms == "Wood N Pool"] <- max(year(wood_n_pool$Date))    
     treatDF$timepoint[treatDF$terms == "Wood N Pool"] <- length(unique(wood_n_pool$Date)) 
-    treatDF$notes[treatDF$terms == "Wood N Pool"] <- "Based on single time point concentration measurement"
+    treatDF$notes[treatDF$terms == "Wood N Pool"] <- ""
+    
+    out <- summaryBy(sapwood_n_pool~Ring,data=wood_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Sapwood N Pool", 2:7] <- out$sapwood_n_pool
+    treatDF$year_start[treatDF$terms == "Sapwood N Pool"] <- min(year(wood_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Sapwood N Pool"] <- max(year(wood_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Sapwood N Pool"] <- length(unique(wood_n_pool$Date)) 
+    treatDF$notes[treatDF$terms == "Sapwood N Pool"] <- ""
+    
+    
+    out <- summaryBy(heartwood_n_pool~Ring,data=wood_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Heartwood N Pool", 2:7] <- out$heartwood_n_pool
+    treatDF$year_start[treatDF$terms == "Heartwood N Pool"] <- min(year(wood_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Heartwood N Pool"] <- max(year(wood_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Heartwood N Pool"] <- length(unique(wood_n_pool$Date)) 
+    treatDF$notes[treatDF$terms == "Heartwood N Pool"] <- ""
     
     
     ### Fine root N pool
@@ -79,22 +112,58 @@ make_pool_summary_table <- function() {
     treatDF$notes[treatDF$terms == "Understorey N Pool"] <- "Used harvest estimate of C pool"
     
     
-    ### Microbial N pool
+    ### Microbial N pool 0-10cm
     out <- summaryBy(microbial_n_g_m2~Ring,data=microbial_n_pool,FUN=mean,keep.names=T,na.rm=T)
-    treatDF[treatDF$terms == "Microbial N Pool", 2:7] <- out$microbial_n_g_m2
-    treatDF$year_start[treatDF$terms == "Microbial N Pool"] <- min(year(microbial_n_pool$Date))    
-    treatDF$year_end[treatDF$terms == "Microbial N Pool"] <- max(year(microbial_n_pool$Date))    
-    treatDF$timepoint[treatDF$terms == "Microbial N Pool"] <- length(unique(microbial_n_pool$Date))  
-    treatDF$notes[treatDF$terms == "Microbial N Pool"] <- "Top 10 cm"
+    treatDF[treatDF$terms == "Microbial N Pool 0-10cm", 2:7] <- out$microbial_n_g_m2
+    treatDF$year_start[treatDF$terms == "Microbial N Pool 0-10cm"] <- min(year(microbial_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Microbial N Pool 0-10cm"] <- max(year(microbial_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Microbial N Pool 0-10cm"] <- length(unique(microbial_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Microbial N Pool 0-10cm"] <- "Top 10 cm"
     
 
-    ### Soil N pool
-    out <- summaryBy(soil_n_g_m2~Ring,data=soil_n_pool,FUN=mean,keep.names=T,na.rm=T)
-    treatDF[treatDF$terms == "Soil N Pool", 2:7] <- out$soil_n_g_m2
-    treatDF$year_start[treatDF$terms == "Soil N Pool"] <- min(year(soil_n_pool$Date))    
-    treatDF$year_end[treatDF$terms == "Soil N Pool"] <- max(year(soil_n_pool$Date))    
-    treatDF$timepoint[treatDF$terms == "Soil N Pool"] <- length(unique(soil_n_pool$Date))  
-    treatDF$notes[treatDF$terms == "Soil N Pool"] <- "Averaged across all N forms"
+    ### Soil N pool 
+    soil_n_pool1 <- soil_n_pool[soil_n_pool$Depth=="0_10",]
+    soil_n_pool2 <- soil_n_pool[soil_n_pool$Depth=="10_30",]
+    
+    out <- summaryBy(soil_n_g_m2~Ring,data=soil_n_pool1,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Soil N Pool 0-10cm", 2:7] <- out$soil_n_g_m2
+    treatDF$year_start[treatDF$terms == "Soil N Pool 0-10cm"] <- min(year(soil_n_pool1$Date))    
+    treatDF$year_end[treatDF$terms == "Soil N Pool 0-10cm"] <- max(year(soil_n_pool1$Date))    
+    treatDF$timepoint[treatDF$terms == "Soil N Pool 0-10cm"] <- length(unique(soil_n_pool1$Date))  
+    treatDF$notes[treatDF$terms == "Soil N Pool 0-10cm"] <- "Averaged across all N forms"
+    
+    
+    out <- summaryBy(soil_n_g_m2~Ring,data=soil_n_pool2,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Soil N Pool 10-30cm", 2:7] <- out$soil_n_g_m2
+    treatDF$year_start[treatDF$terms == "Soil N Pool 10-30cm"] <- min(year(soil_n_pool2$Date))    
+    treatDF$year_end[treatDF$terms == "Soil N Pool 10-30cm"] <- max(year(soil_n_pool2$Date))    
+    treatDF$timepoint[treatDF$terms == "Soil N Pool 10-30cm"] <- length(unique(soil_n_pool2$Date))  
+    treatDF$notes[treatDF$terms == "Soil N Pool 10-30cm"] <- "Averaged across all N forms"
+    
+    
+    ### soil Inorg N
+    out <- summaryBy(total_inorganic_pool~Ring,data=soil_inorganic_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Soil Inorg N Pool 0-10cm", 2:7] <- out$total_inorganic_pool
+    treatDF$year_start[treatDF$terms == "Soil Inorg N Pool 0-10cm"] <- min(year(soil_inorganic_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Soil Inorg N Pool 0-10cm"] <- max(year(soil_inorganic_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Soil Inorg N Pool 0-10cm"] <- length(unique(soil_inorganic_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Soil Inorg N Pool 0-10cm"] <- "Averaged across all N forms"
+    
+    
+    out <- summaryBy(nitrate_pool~Ring,data=soil_inorganic_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Soil NO3-N Pool 0-10cm", 2:7] <- out$nitrate_pool
+    treatDF$year_start[treatDF$terms == "Soil NO3-N Pool 0-10cm"] <- min(year(soil_inorganic_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Soil NO3-N Pool 0-10cm"] <- max(year(soil_inorganic_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Soil NO3-N Pool 0-10cm"] <- length(unique(soil_inorganic_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Soil NO3-N Pool 0-10cm"] <- ""
+    
+    
+    out <- summaryBy(ammonium_pool~Ring,data=soil_inorganic_n_pool,FUN=mean,keep.names=T,na.rm=T)
+    treatDF[treatDF$terms == "Soil NH4-N Pool 0-10cm", 2:7] <- out$ammonium_pool
+    treatDF$year_start[treatDF$terms == "Soil NH4-N Pool 0-10cm"] <- min(year(soil_inorganic_n_pool$Date))    
+    treatDF$year_end[treatDF$terms == "Soil NH4-N Pool 0-10cm"] <- max(year(soil_inorganic_n_pool$Date))    
+    treatDF$timepoint[treatDF$terms == "Soil NH4-N Pool 0-10cm"] <- length(unique(soil_inorganic_n_pool$Date))  
+    treatDF$notes[treatDF$terms == "Soil NH4-N Pool 0-10cm"] <- ""
     
     
     ### calculate treatment averages

@@ -5,11 +5,22 @@ make_flux_summary_table <- function() {
     conv <- 365 / 1000
     
     ### Define production variable names
-    terms <- c("Canopy N flux", "Wood N flux", "Coarse Root N flux", "Fine Root N flux",
-               "Leaflitter N flux", "Fineroot Litter N flux",
-               "Twig litter N flux", "Bark litter N flux","Seed litter N flux", "Frass N flux",
-               "Understorey N flux", "Understorey Litter N flux", "Mineralization N flux",
-               "Leaching N flux", "Nitrification N flux", "Atmospheric deposition N flux")
+    terms <- c("Canopy N flux", 
+               "Wood N flux", 
+               "Coarse Root N flux", 
+               "Fine Root N flux",
+               "Leaflitter N flux", 
+               "Fineroot Litter N flux",
+               "Twig litter N flux", 
+               "Bark litter N flux",
+               "Seed litter N flux", 
+               "Frass N flux",
+               "Understorey N flux", 
+               "Understorey Litter N flux", 
+               "Mineralization N flux",
+               "Leaching N flux", 
+               "Nitrification N flux", 
+               "Atmospheric deposition N flux")
     
     treatDF <- data.frame(terms)
     treatDF$R1 <- rep(NA, length(treatDF$terms))
