@@ -355,52 +355,9 @@ atmospheric_deposition_n_flux <- make_atmospheric_deposition_n_flux()
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step B4: Import P-related variables
+##### Step B4: Import P-related variables -- yet to be finalized
+import_P_budget_output()
 
-
-
-
-##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step B5: Making NP ratios
-### Canopy N:P ratio
-#canopy_np_ratio <- make_canopy_np_ratios(n_conc=canopy_n_concentration,
-#                                         p_conc=canopy_p_concentration)
-#
-#### leaflitter N:P ratio
-#leaflitter_np_ratio <- make_leaflitter_np_ratios(n_conc=leaflitter_n_concentration,
-#                                                 p_conc=leaflitter_p_concentration)
-#
-#### wood N:P ratio
-#wood_np_ratio <- make_wood_np_ratios(n_conc=wood_n_concentration,
-#                                     p_conc=wood_p_concentration)
-#
-#### fineroot N:P ratio
-#fineroot_np_ratio <- make_fineroot_np_ratios(n_conc=fineroot_n_concentration,
-#                                             p_conc=fineroot_p_concentration)
-#
-#
-#### Frass N:P ratios
-#frass_np_ratio <- make_frass_np_ratios(n_conc=frass_n_concentration,
-#                                       p_conc=frass_p_concentration)
-#
-#### Understorey N:P ratios
-#understorey_np_ratio <- make_understorey_np_ratios(n_conc=understorey_n_concentration,
-#                                                   p_conc=understorey_p_concentration)
-#
-#
-#### Soil N:P ratios
-#soil_np_ratio <- make_soil_np_ratios(n_pool=soil_n_pool,
-#                                     p_pool=soil_p_pool)
-#
-#### readily available N:P ratio (i.e. sum of nitrate and ammonium : phosphate-P)
-#readily_available_soil_np_ratio <- make_readily_available_soil_np_ratios(n_pool=soil_inorganic_n_pool,
-#                                                                         p_pool=soil_phosphate_pool)
-#
-#
-#### microbes
-#microbial_np_ratio <- make_microbial_np_ratios(n_conc=microbial_n_concentration,
-#                                               p_conc=microbial_p_concentration)
-#
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step B6: Making N budgeting variables and tables, based on raw data
@@ -482,8 +439,11 @@ summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
                                     c_flux=summary_table_c_flux,
                                     n_flux=summary_table_flux)
 
+
 #### NP ratios
-#summary_np_ratios <- make_summary_table_np_ratios()
+summary_np_ratios <- make_summary_table_np_ratios(n_conc=summary_table_concentration,
+                                                  n_flux=summary_table_flux,
+                                                  n_pool=summary_table_pool)
 
 
 

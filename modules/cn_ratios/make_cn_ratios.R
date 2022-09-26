@@ -1,4 +1,7 @@
-make_cn_ratios <- function(c_pool, n_pool, c_flux, n_flux) {
+make_cn_ratios <- function(c_pool, 
+                           n_pool, 
+                           c_flux, 
+                           n_flux) {
     
     out <- data.frame(c(1:6), NA, NA, NA, NA, NA, NA, NA, NA)
     colnames(out) <- c("Ring", "canopy", "leaflitter", "understorey", "wood",
