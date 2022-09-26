@@ -458,14 +458,30 @@ soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bu
 ##### ---------------------------------------------------------------------------------------------------------##### 
 ##### Step B6: Making N budgeting variables and tables, based on raw data
 #### 6.1 Summary Tables
-### to add: NO3, NH4, soil N of different layers
 source("programs/summary_tables/unnormalized/make_conc_summary_table.R")
-summary_table_concentration <- make_conc_summary_table()
+summary_table_concentration <- make_conc_summary_table(canopy_n_concentration=canopy_n_concentration,
+                                                       wood_n_concentration=wood_n_concentration,
+                                                       fineroot_n_concentration=fineroot_n_concentration,
+                                                       understorey_n_concentration=understorey_n_concentration,
+                                                       frass_n_concentration=frass_n_concentration,
+                                                       leaflitter_n_concentration=leaflitter_n_concentration,
+                                                       microbial_n_concentration=microbial_n_concentration,
+                                                       soil_n_concentration=soil_n_concentration,
+                                                       soil_inorganic_n_concentration=soil_inorganic_n_concentration)
+
 
 ### N pools by treatment and ring
 ### to add: NO3, NH4, soil N of different layers
 source("programs/summary_tables/unnormalized/make_pool_summary_table.R")
-summary_table_pool <- make_pool_summary_table()
+summary_table_pool <- make_pool_summary_table(canopy_n_pool=canopy_n_pool,
+                                              wood_n_pool=wood_n_pool,
+                                              fineroot_n_pool=fineroot_n_pool,
+                                              coarseroot_n_pool=coarseroot_n_pool,
+                                              leaflitter_n_pool=leaflitter_n_pool,
+                                              understorey_n_pool=understorey_n_pool,
+                                              soil_n_pool=soil_n_pool,
+                                              soil_inorganic_n_pool=soil_inorganic_n_pool,
+                                              microbial_n_pool=microbial_n_pool)
 
 
 ### N fluxes by treatment and ring
