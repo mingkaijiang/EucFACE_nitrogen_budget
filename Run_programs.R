@@ -347,68 +347,15 @@ soil_nitrification_n_flux <- make_soil_n_nitrification_flux(bk_density=soil_bulk
 soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bulk_density)
 
 
-
 ### leaching flux
-#soil_leaching_n_flux <- make_soil_leaching_n_flux()
+soil_leaching_n_flux <- make_soil_leaching_n_flux()
 
 ### atmospheric N deposition flux
-#atmospheric_deposition_n_flux <- make_atmospheric_deposition_n_flux()
+atmospheric_deposition_n_flux <- make_atmospheric_deposition_n_flux()
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step B4: Generate P concentrations
-#### 1.1: Soil P concentrations 
-#soil_p_concentration <- make_soil_p_concentration(func=mean)
-#
-#
-##### 1.2: Soil phosphate conc, this returns % of P, not % of PO4!
-##### Only top 10 cm!
-#soil_phosphate_concentration <- make_soil_phosphate_concentration(func=mean)
-#
-##### 1.3 Microbial P conc.
-##### Only top 10 cm!
-#microbial_p_concentration <- make_microbial_p_concentration()
-#
-#
-##### 1.4 Canopy P conc.
-#canopy_p_concentration <- make_canopy_p_concentration(func=mean)
-#
-##### 1.5 Leaf litter P conc. 
-#leaflitter_p_concentration <- make_leaflitter_p_concentration(func=mean)
-#
-#
-##### 1.6 Wood P conc. 
-#wood_p_concentration <- make_wood_p_concentration(func=mean)
-#
-#
-##### 1.7 Frass P conc.
-#frass_p_concentration <- make_frass_p_concentration(func=mean)
-#
-#
-##### 1.8 Fineroot P conc.
-#fineroot_p_concentration <- make_fineroot_p_concentration(func=mean)
-#
-#
-##### 1.9 Understorey P conc.
-#understorey_p_concentration <- make_understorey_p_concentration(func=mean)
-#
-##### 1.10 Understorey litter P conc.
-#understorey_litter_p_concentration <- make_understorey_litter_p_concentration(func=mean)
-#
-#
-##### 1.11 Understorey P retranslocation coefficient
-#understorey_p_retranslocation_coefficient <- make_understorey_p_retranslocation()
-#
-##### 1.12 Hedley fractionation dataset
-#soil_hedley_p_concentration <- make_soil_hedley_p_concentration(func=mean)
-#
-##### soil P pool and soil phosphate P pool
-#soil_p_pool <- make_soil_p_pool(p_conc=soil_p_concentration,
-#                                bk_density=soil_bulk_density)
-#
-#soil_phosphate_pool <- make_soil_phosphate_pool(p_conc=soil_phosphate_concentration,
-#                                                bk_density=soil_bulk_density)
-
+##### Step B4: Import P-related variables
 
 
 
@@ -497,8 +444,8 @@ summary_table_flux <- make_flux_summary_table(soil_mineralization_n_flux=soil_mi
                                               seed_litter_n_flux=seed_litter_n_flux,
                                               twig_litter_n_flux=twig_litter_n_flux,
                                               fineroot_litter_n_flux=fineroot_litter_n_flux,
-                                              # atmospheric_n_deposition=atmospheric_n_deposition,
-                                              # leaching_n_flux=leaching_n_flux,
+                                              atmospheric_n_deposition=atmospheric_deposition_n_flux,
+                                              leaching_n_flux=soil_leaching_n_flux,
                                               understorey_n_flux=understorey_n_flux,
                                               understorey_litter_n_flux=understorey_litter_n_flux)
 
@@ -528,11 +475,12 @@ summary_table_c_flux <- make_c_flux_summary_table(norm="unnormalized",
                                                   understorey_c_flux=understorey_c_flux,
                                                   frass_c_production_flux=frass_c_production_flux)
 
+
 #### CN ratios 
-#summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
-#                                    n_pool=summary_table_pool,
-#                                    c_flux=summary_table_c_flux,
-#                                    n_flux=summary_table_flux)
+summary_cn_ratios <- make_cn_ratios(c_pool=summary_table_c_pool,
+                                    n_pool=summary_table_pool,
+                                    c_flux=summary_table_c_flux,
+                                    n_flux=summary_table_flux)
 
 #### NP ratios
 #summary_np_ratios <- make_summary_table_np_ratios()

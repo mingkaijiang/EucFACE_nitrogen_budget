@@ -1,5 +1,23 @@
 
-make_flux_summary_table <- function() {
+make_flux_summary_table <- function(soil_mineralization_n_flux,
+                                    soil_nitrification_n_flux,
+                                    canopy_n_flux,
+                                    wood_n_production,
+                                    fineroot_n_production,
+                                    coarseroot_n_production,
+                                    canopy_n_retranslocation_flux,
+                                    sapwood_n_retranslocation_flux,
+                                    fineroot_n_retranslocation_flux,
+                                    understorey_n_retranslocation_flux,
+                                    leaflitter_n_flux,
+                                    bark_litter_n_flux,
+                                    seed_litter_n_flux,
+                                    twig_litter_n_flux,
+                                    fineroot_litter_n_flux,
+                                    atmospheric_n_deposition,
+                                    leaching_n_flux,
+                                    understorey_n_flux,
+                                    understorey_litter_n_flux) {
     
     ### convert daily flux in mg N m2 d-1 to g N m-2 yr-1
     conv <- 365 / 1000
@@ -20,7 +38,11 @@ make_flux_summary_table <- function() {
                "Mineralization N flux",
                "Leaching N flux", 
                "Nitrification N flux", 
-               "Atmospheric deposition N flux")
+               "Atmospheric deposition N flux",
+               "Canopy retrans N flux",
+               "Sapwood retrans N flux",
+               "Fineroot retrans N flux",
+               "Understorey retrans N flux")
     
     treatDF <- data.frame(terms)
     treatDF$R1 <- rep(NA, length(treatDF$terms))
@@ -187,25 +209,70 @@ make_flux_summary_table <- function() {
     
     
     ###  N leaching flux
-    #for (i in c(1:6)) {
-    #  treatDF[treatDF$terms == "Leaching N flux", i+1] <- with(soil_n_leaching[soil_n_leaching$Ring ==i,],
-    #                                                                 sum(phosphate_leaching_flux*Days)/sum(Days)) * conv
-    #}
-    #treatDF$year_start[treatDF$terms == "Leaching N flux"] <- min(year(soil_n_leaching$Date))    
-    #treatDF$year_end[treatDF$terms == "Leaching N flux"] <- max(year(soil_n_leaching$Date))    
-    #treatDF$timepoint[treatDF$terms == "Leaching N flux"] <- length(unique(soil_n_leaching$Date))  
-    #treatDF$notes[treatDF$terms == "Leaching N flux"] <- "drainage 20 ml/d"
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Leaching N flux", i+1] <- with(soil_leaching_n_flux[soil_leaching_n_flux$Ring ==i,],
+                                                                     sum(nitrogen_leaching_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Leaching N flux"] <- min(year(soil_leaching_n_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Leaching N flux"] <- max(year(soil_leaching_n_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Leaching N flux"] <- length(unique(soil_leaching_n_flux$Date))  
+    treatDF$notes[treatDF$terms == "Leaching N flux"] <- "drainage 20 ml/d"
     
     
     ### atmospheric N deposition flux
-    #for (i in c(1:6)) {
-    #  treatDF[treatDF$terms == "Atmospheric deposition N flux", i+1] <- with(atmospheric_deposition_n_flux[atmospheric_depositio_n_flux$Ring ==i,],
-    #                                                              sum(atmospheric_depositio_n_flux_mg_m2_d*Days)/sum(Days)) * conv
-    #}
-    #treatDF$year_start[treatDF$terms == "Atmospheric deposition N flux"] <- min(year(atmospheric_depositio_n_flux$Date))    
-    #treatDF$year_end[treatDF$terms == "Atmospheric deposition N flux"] <- max(year(atmospheric_depositio_n_flux$Date))    
-    #treatDF$timepoint[treatDF$terms == "Atmospheric deposition N flux"] <- length(unique(atmospheric_depositio_n_flux$Date))  
-    #treatDF$notes[treatDF$terms == "Atmospheric deposition N flux"] <- "Literature value"
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Atmospheric deposition N flux", i+1] <- with(atmospheric_deposition_n_flux[atmospheric_deposition_n_flux$Ring ==i,],
+                                                                  sum(n_deposition_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Atmospheric deposition N flux"] <- min(year(atmospheric_deposition_n_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Atmospheric deposition N flux"] <- max(year(atmospheric_deposition_n_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Atmospheric deposition N flux"] <- length(unique(atmospheric_deposition_n_flux$Date))  
+    treatDF$notes[treatDF$terms == "Atmospheric deposition N flux"] <- "Literature value"
+    
+    
+    
+    ###  Canopy N retrans
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Canopy retrans N flux", i+1] <- with(canopy_n_retranslocation_flux[canopy_n_retranslocation_flux$Ring ==i,],
+                                                                    sum(canopy_n_retrans_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Canopy retrans N flux"] <- min(year(canopy_n_retranslocation_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Canopy retrans N flux"] <- max(year(canopy_n_retranslocation_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Canopy retrans N flux"] <- length(unique(canopy_n_retranslocation_flux$Date))  
+    treatDF$notes[treatDF$terms == "Canopy retrans N flux"] <- "data"
+    
+    
+    ###  Sapwood N retrans
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Sapwood retrans N flux", i+1] <- with(sapwood_n_retranslocation_flux[sapwood_n_retranslocation_flux$Ring ==i,],
+                                                                     sum(sapwood_n_retrans_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Sapwood retrans N flux"] <- min(year(sapwood_n_retranslocation_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Sapwood retrans N flux"] <- max(year(sapwood_n_retranslocation_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Sapwood retrans N flux"] <- length(unique(sapwood_n_retranslocation_flux$Date))  
+    treatDF$notes[treatDF$terms == "Sapwood retrans N flux"] <- "estimates"
+    
+    
+    ###  Fineroot N retrans
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Fineroot retrans N flux", i+1] <- with(fineroot_n_retranslocation_flux[fineroot_n_retranslocation_flux$Ring ==i,],
+                                                                      sum(fineroot_n_retranslocation_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Fineroot retrans N flux"] <- min(year(fineroot_n_retranslocation_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Fineroot retrans N flux"] <- max(year(fineroot_n_retranslocation_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Fineroot retrans N flux"] <- length(unique(fineroot_n_retranslocation_flux$Date))  
+    treatDF$notes[treatDF$terms == "Fineroot retrans N flux"] <- "estimates"
+    
+    
+    ### Understorey N retrans flux
+    for (i in c(1:6)) {
+      treatDF[treatDF$terms == "Understorey retrans N flux", i+1] <- with(understorey_n_retranslocation_flux[understorey_n_retranslocation_flux$Ring ==i,],
+                                                                  sum(understorey_n_retranslocation_flux*Days)/sum(Days)) * conv
+    }
+    treatDF$year_start[treatDF$terms == "Understorey retrans N flux"] <- min(year(understorey_n_retranslocation_flux$Date))    
+    treatDF$year_end[treatDF$terms == "Understorey retrans N flux"] <- max(year(understorey_n_retranslocation_flux$Date))    
+    treatDF$timepoint[treatDF$terms == "Understorey retrans N flux"] <- length(unique(understorey_n_retranslocation_flux$Date))  
+    treatDF$notes[treatDF$terms == "Understorey retrans N flux"] <- "estimate"
     
     
     ### calculate treatment averages
