@@ -225,7 +225,7 @@ fineroot_n_pool <- make_fineroot_n_pool(n_conc=fineroot_n_concentration,
 ### coarseroot N pool
 coarseroot_n_pool <- make_coarseroot_n_pool(n_conc=wood_n_concentration,
                                             c_pool=coarse_root_c_pool,
-                                            case_consideration="total")
+                                            n_retrans=wood_n_retrans_coefficient)
 
 ### Understorey N pool
 understorey_n_pool <- make_understorey_n_pool(n_conc=understorey_n_concentration,
@@ -289,9 +289,15 @@ canopy_n_retranslocation_flux <- calculate_canopy_n_retranslocation_flux(tflux=c
 wood_n_production <- make_wood_n_production(n_conc=wood_n_concentration,
                                             c_flux=wood_c_production)
 
+
+sapwood_n_retranslocation_flux <- calculate_sapwood_n_retranslocation_flux(tflux=wood_n_production,
+                                                                           retransDF=wood_n_retrans_coefficient)
+
+
 ### fineroot N production
 fineroot_n_production <- make_fineroot_n_production(n_conc=fineroot_n_concentration,
                                                     c_flux=fineroot_c_production_flux)
+
 
 ### fineroot litter N flux
 ### and fine root c production flux is fine root c litter flux
@@ -300,10 +306,14 @@ fineroot_litter_n_flux <- make_fineroot_litter_n_flux(n_conc=fineroot_n_concentr
                                                       n_retrans=fineroot_n_retrans_coefficient)
 
 
+fineroot_n_retranslocation_flux <- make_fineroot_retranslocation_n_flux(df1=fineroot_n_production,
+                                                                        df2=fineroot_litter_n_flux)
+
 
 ### coarseroot N production
 coarseroot_n_production <- make_coarseroot_n_production(n_conc=wood_n_concentration,
-                                                        c_flux=coarse_root_c_flux)
+                                                        c_flux=coarse_root_c_flux,
+                                                        n_retrans=wood_n_retrans_coefficient)
 
 
 ### Frass N production
@@ -320,19 +330,22 @@ understorey_n_flux <- make_understorey_n_flux(n_conc=understorey_n_concentration
 
 
 
+understorey_litter_n_flux <- make_understorey_litter_n_flux(n_conc=understorey_n_concentration,
+                                                            c_flux=understorey_c_flux,
+                                                            n_retrans=understorey_n_retrans_coefficient)
+
+
+understorey_n_retranslocation_flux <- make_understorey_retranslocation_n_flux(df1=understorey_n_flux,
+                                                                              df2=understorey_litter_n_flux)
+
+
+
 ### Soil nitrification flux 0 - 10 cm
 soil_nitrification_n_flux <- make_soil_n_nitrification_flux(bk_density=soil_bulk_density)
 
 ### Soil N mineralization flux 0 - 10 cm
 soil_mineralization_n_flux <- make_soil_n_mineralization_flux(bk_density=soil_bulk_density)
 
-
-
-
-
-understorey_litter_n_flux <- make_understorey_litter_n_flux(n_conc=understorey_n_concentration,
-                                                            c_flux=understorey_c_flux,
-                                                            n_retrans=0.5)
 
 
 ### leaching flux

@@ -6,13 +6,12 @@ make_wood_n_pool <- function(n_conc, c_pool, n_retrans) {
     
     out <- merge(out, n_retrans, by="Ring")
     
-    ### data from Kristine: sapwood N conc, no data on heartwood N, assuming 50% resorption
-    out$wood_n_pool <- (out$sap_pool / c_fraction * out$PercN / 100) + (out$heart_pool / c_fraction * out$PercN * out$retrans_coef / 100)
-    
+    ### data from Kristine: sapwood N conc, no data on heartwood N
     out$sapwood_n_pool <- out$sap_pool / c_fraction * out$PercN / 100
     
-    out$heartwood_n_pool <- (out$heart_pool / c_fraction * out$PercN * out$retrans_coef / 100)
+    out$heartwood_n_pool <- (out$heart_pool / c_fraction * out$PercN * (1-out$retrans_coef) / 100)
     
+    out$wood_n_pool <- with(out, sapwood_n_pool+heartwood_n_pool)
     
     outDF <- out[complete.cases(out),]
     

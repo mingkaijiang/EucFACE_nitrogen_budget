@@ -3,7 +3,7 @@ make_understorey_litter_n_flux <- function(n_conc,
                                            n_retrans){
     
     ### prepare output df
-    out <- c_flux
+    out <- merge(c_flux, n_retrans, by="Ring")
     
     ### prepare out df dates
     out$s.diff <- difftime(out$Start_date, "2010-01-01", units="days")
@@ -25,7 +25,7 @@ make_understorey_litter_n_flux <- function(n_conc,
         }
     }
     
-    out$PercN <- out$PercN * (1 - n_retrans)
+    out$PercN <- out$PercN * (1 - out$retrans_coef)
     
     outDF <- out[complete.cases(out),]
     
