@@ -1,35 +1,50 @@
-make_summary_table_np_ratios <- function() {
+make_summary_table_np_ratios <- function(n_conc,
+                                         n_flux,
+                                         n_pool) {
     
-    ### canopy
-    outDF <- canopy_np_ratio
-    colnames(outDF) <- c("Ring", "canopy")
+    ### read in P concentration, P fluxes and P pools
+    p_conc <- read.csv("plots_tables/summary_tables/p_budget/summary_table_P_concentration_unnormalized.csv")
+    p_flux <- read.csv("plots_tables/summary_tables/p_budget/summary_table_P_flux_unnormalized.csv")
+    p_pool <- read.csv("plots_tables/summary_tables/p_budget/summary_table_P_pool_unnormalized.csv")
     
-    ### leaflitter
-    outDF$leafliter <- leaflitter_np_ratio$np_ratio
     
-    ### understorey
-    outDF$understorey <- understorey_np_ratio$np_ratio
+    ### prepare output data frame
+    out <- data.frame(c(1:6), NA, NA, NA, NA, NA, NA, NA, NA, NA)
+    colnames(out) <- c("Ring", "canopy", "leaflitter", "understorey", "sapwood",
+                       "fineroot", "frass", "soil_0_10", "soil_10_30","microbe")
     
-    ### wood
-    outDF$wood <- wood_np_ratio$np_ratio
     
-    ### fineroot
-    outDF$fineroot <- fineroot_np_ratio$np_ratio
+    ### Compute CN ratio for major pools
+    out$canopy <- as.numeric(n_conc[n_conc$conc.terms == "Canopy N Conc", 2:7]/p_conc[p_conc$conc.terms == "Canopy P Conc",
+                                                                                 2:7])
     
-    ### frass
-    outDF$frass <- frass_np_ratio$np_ratio
+    out$leaflitter <- as.numeric(n_conc[n_conc$conc.terms == "Leaflitter N Conc", 2:7]/p_conc[p_conc$conc.terms == "Leaflitter P Conc",
+                                                                                      2:7])
     
-    ### soil
-    outDF$soil <- soil_np_ratio$np_ratio
+    out$understorey <- as.numeric(n_conc[n_conc$conc.terms == "Understorey N Conc", 2:7]/p_conc[p_conc$conc.terms == "Understorey P Conc",
+                                                                                      2:7])
     
-    ### microbe
-    outDF$microbe <- microbial_np_ratio$np_ratio
+    out$sapwood <- as.numeric(n_conc[n_conc$conc.terms == "Sapwood N Conc", 2:7]/p_conc[p_conc$conc.terms == "Sapwood P Conc",
+                                                                                      2:7])
     
-    ### readily available nutrients
-    outDF$readily_available_soil <- readily_available_soil_np_ratio$np_ratio
+    out$fineroot <- as.numeric(n_conc[n_conc$conc.terms == "Fine Root N Conc", 2:7]/p_conc[p_conc$conc.terms == "Fine Root P Conc",
+                                                                                      2:7])
+    
+    out$frass <- as.numeric(n_conc[n_conc$conc.terms == "Frass N Conc", 2:7]/p_conc[p_conc$conc.terms == "Frass P Conc",
+                                                                                      2:7])
+    
+    out$soil_0_10 <- as.numeric(n_conc[n_conc$conc.terms == "Soil N Conc 0-10cm", 2:7]/p_conc[p_conc$conc.terms == "Soil P Conc 0-10cm",
+                                                                                      2:7])
+    
+    out$soil_10_30 <- as.numeric(n_conc[n_conc$conc.terms == "Soil N Conc 10-30cm", 2:7]/p_conc[p_conc$conc.terms == "Soil P Conc 10-30cm",
+                                                                                      2:7])
+    
+    out$microbe <- as.numeric(n_conc[n_conc$conc.terms == "Microbial N Conc 0-10cm", 2:7]/p_conc[p_conc$conc.terms == "Microbial P Conc 0-10cm",
+                                                                                      2:7])
+    
     
 
-    write.csv(outDF, "plots_tables/summary_np_ratios.csv", row.names=F)
+    write.csv(out, "plots_tables/summary_np_ratios.csv", row.names=F)
      
-     return(outDF)
+     return(out)
 }

@@ -1,10 +1,9 @@
 make_total_plant_n_fluxes <- function(sumDF) {
 
-    #### Calculate total plant N requirment flux
-    ### ignore litter fluxes, mineralization fluxes, leaching fluxes, nitrification fluxes, and deposition fluxes
+    #### Calculate total plant N requirement flux
     myDF1 <- sumDF[sumDF$terms%in%c("Canopy N flux", "Wood N flux", "Fine Root N flux",
                                    "Coarse Root N flux", "Twig litter N flux", "Bark litter N flux", 
-                                   "Seed litter N flux", "Frass N flux", "Understorey N flux"),]
+                                   "Seed litter N flux", "Understorey N flux"),]
     
     tot1 <- colSums(myDF1[,2:7])
     
@@ -14,11 +13,21 @@ make_total_plant_n_fluxes <- function(sumDF) {
     
     #### Calculate total plant litter N flux
     ### litter fluxes, we do not have wood and coarseroot
-    myDF2 <- sumDF[sumDF$terms%in%c("Leaflitter N flux", "Fineroot Litter N flux", "Understorey Litter N flux"),]
+    myDF2 <- sumDF[sumDF$terms%in%c("Leaflitter N flux", "Fineroot Litter N flux", "Understorey Litter N flux",
+                                    "Twig litter N flux", "Bark litter N flux", "Seed litter N flux"),]
     
     tot2 <- colSums(myDF2[,2:7])
     
     out$Total_plant_litter_N_flux <- tot2
+    
+    
+    ### total retrans
+    myDF2 <- sumDF[sumDF$terms%in%c("Canopy retrans N flux", "Sapwood retrans N flux", "Understorey retrans N flux",
+                                    "Fineroot retrans N flux"),]
+    
+    tot2 <- colSums(myDF2[,2:7])
+    
+    out$Total_plant_retranslocation_N_flux2 <- tot2
     
     
     #### Calculate total plant retranslocation N flux

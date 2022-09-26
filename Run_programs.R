@@ -457,7 +457,6 @@ vegetation_standing_n_stock <- make_vegetation_standing_n_stock(leaf=canopy_n_po
 
 ### total plant N requirement flux, retranslocation flux, and uptake flux
 ### for total retranslocation flux and uptake flux,
-### we do not have heartwood data so ignores wood and coarseroot in this calculation!!!!!
 total_plant_n_fluxes <- make_total_plant_n_fluxes(sumDF=summary_table_flux)
 
 

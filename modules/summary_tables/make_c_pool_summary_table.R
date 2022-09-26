@@ -21,8 +21,14 @@ make_c_pool_summary_table <- function(norm,
              "Fine Root C Pool",
              "Coarse Root C Pool", 
              "Understorey C Pool", 
+             "Microbial C Pool 0-10cm",
+             "Microbial C Pool 10-30cm",
+             "Microbial C Pool 30-60cm",
              "Microbial C Pool",
              "Leaflitter C Pool",
+             "Soil C Pool 0-10cm",
+             "Soil C Pool 10-30cm",
+             "Soil C Pool 30-60cm",
              "Soil C Pool")
   
   treatDF <- data.frame(terms)
@@ -125,6 +131,37 @@ make_c_pool_summary_table <- function(norm,
   treatDF$notes[treatDF$terms == "Microbial C Pool"] <- "all depth"
   
   
+  microbial_c_pool1 <- subset(microbial_c_pool, Depth=="0_10")
+  out1 <- summaryBy(Cmic_g_m2~Ring,data=microbial_c_pool1,FUN=mean,keep.names=T,na.rm=T)
+  
+  treatDF[treatDF$terms == "Microbial C Pool 0-10cm", 2:7] <- out1$Cmic_g_m2
+  treatDF$year_start[treatDF$terms == "Microbial C Pool 0-10cm"] <- min(year(microbial_c_pool1$Date))    
+  treatDF$year_end[treatDF$terms == "Microbial C Pool 0-10cm"] <- max(year(microbial_c_pool1$Date))    
+  treatDF$timepoint[treatDF$terms == "Microbial C Pool 0-10cm"] <- length(unique(microbial_c_pool1$Date))  
+  treatDF$notes[treatDF$terms == "Microbial C Pool 0-10cm"] <- ""
+  
+  
+  microbial_c_pool1 <- subset(microbial_c_pool, Depth=="10_30")
+  out1 <- summaryBy(Cmic_g_m2~Ring,data=microbial_c_pool1,FUN=mean,keep.names=T,na.rm=T)
+  
+  treatDF[treatDF$terms == "Microbial C Pool 10-30cm", 2:7] <- out1$Cmic_g_m2
+  treatDF$year_start[treatDF$terms == "Microbial C Pool 10-30cm"] <- min(year(microbial_c_pool1$Date))    
+  treatDF$year_end[treatDF$terms == "Microbial C Pool 10-30cm"] <- max(year(microbial_c_pool1$Date))    
+  treatDF$timepoint[treatDF$terms == "Microbial C Pool 10-30cm"] <- length(unique(microbial_c_pool1$Date))  
+  treatDF$notes[treatDF$terms == "Microbial C Pool 10-30cm"] <- ""
+  
+  
+  
+  microbial_c_pool1 <- subset(microbial_c_pool, Depth=="transition")
+  out1 <- summaryBy(Cmic_g_m2~Ring,data=microbial_c_pool1,FUN=mean,keep.names=T,na.rm=T)
+  
+  treatDF[treatDF$terms == "Microbial C Pool 30_60cm", 2:7] <- out1$Cmic_g_m2
+  treatDF$year_start[treatDF$terms == "Microbial C Pool 30_60cm"] <- min(year(microbial_c_pool1$Date))    
+  treatDF$year_end[treatDF$terms == "Microbial C Pool 30_60cm"] <- max(year(microbial_c_pool1$Date))    
+  treatDF$timepoint[treatDF$terms == "Microbial C Pool 30_60cm"] <- length(unique(microbial_c_pool1$Date))  
+  treatDF$notes[treatDF$terms == "Microbial C Pool 30_60cm"] <- ""
+  
+  
   ### Soil C pool
   out1 <- summaryBy(soil_carbon_pool~Ring+Depth,data=soil_c_pool,FUN=mean,keep.names=T,na.rm=T)
   out2 <- summaryBy(soil_carbon_pool~Ring,data=out1,FUN=sum,keep.names=T,na.rm=T)
@@ -135,6 +172,35 @@ make_c_pool_summary_table <- function(norm,
   treatDF$timepoint[treatDF$terms == "Soil C Pool"] <- length(unique(soil_c_pool$Date))  
   treatDF$notes[treatDF$terms == "Soil C Pool"] <- "Averaged across all C forms"
   
+  
+  soil_c_pool1 <- subset(soil_c_pool, Depth=="0_10")
+  out2 <- summaryBy(soil_carbon_pool~Ring,data=soil_c_pool1,FUN=mean,keep.names=T,na.rm=T)
+  
+  treatDF[treatDF$terms == "Soil C Pool 0-10cm", 2:7] <- out2$soil_carbon_pool
+  treatDF$year_start[treatDF$terms == "Soil C Pool 0-10cm"] <- min(year(soil_c_pool1$Date))    
+  treatDF$year_end[treatDF$terms == "Soil C Pool 0-10cm"] <- max(year(soil_c_pool1$Date))    
+  treatDF$timepoint[treatDF$terms == "Soil C Pool 0-10cm"] <- length(unique(soil_c_pool1$Date))  
+  treatDF$notes[treatDF$terms == "Soil C Pool 0-10cm"] <- ""
+  
+  
+  soil_c_pool1 <- subset(soil_c_pool, Depth=="10_30")
+  out2 <- summaryBy(soil_carbon_pool~Ring,data=soil_c_pool1,FUN=mean,keep.names=T,na.rm=T)
+  
+  treatDF[treatDF$terms == "Soil C Pool 10-30cm", 2:7] <- out2$soil_carbon_pool
+  treatDF$year_start[treatDF$terms == "Soil C Pool 10-30cm"] <- min(year(soil_c_pool1$Date))    
+  treatDF$year_end[treatDF$terms == "Soil C Pool 10-30cm"] <- max(year(soil_c_pool1$Date))    
+  treatDF$timepoint[treatDF$terms == "Soil C Pool 10-30cm"] <- length(unique(soil_c_pool1$Date))  
+  treatDF$notes[treatDF$terms == "Soil C Pool 10-30cm"] <- ""
+  
+  
+  soil_c_pool1 <- subset(soil_c_pool, Depth=="transition")
+  out2 <- summaryBy(soil_carbon_pool~Ring,data=soil_c_pool1,FUN=mean,keep.names=T,na.rm=T)
+  
+  treatDF[treatDF$terms == "Soil C Pool 30-60cm", 2:7] <- out2$soil_carbon_pool
+  treatDF$year_start[treatDF$terms == "Soil C Pool 30-60cm"] <- min(year(soil_c_pool1$Date))    
+  treatDF$year_end[treatDF$terms == "Soil C Pool 30-60cm"] <- max(year(soil_c_pool1$Date))    
+  treatDF$timepoint[treatDF$terms == "Soil C Pool 30-60cm"] <- length(unique(soil_c_pool1$Date))  
+  treatDF$notes[treatDF$terms == "Soil C Pool 30-60cm"] <- ""
 
   
   ### calculate treatment averages
