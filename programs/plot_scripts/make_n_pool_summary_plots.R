@@ -25,41 +25,70 @@ make_n_pools_summary_plots <- function(inDF) {
     plotDF1$neg <- with(plotDF1, mean - sd)
     
     ### Plot 2
-    plotDF2 <- data.frame(c(inDF$aCO2[inDF$terms=="Microbial N Pool"], 
-                            inDF$eCO2[inDF$terms=="Microbial N Pool"]), 
+    plotDF2 <- data.frame(c(inDF$aCO2[inDF$terms=="Microbial N Pool 0-10cm"], 
+                            inDF$eCO2[inDF$terms=="Microbial N Pool 0-10cm"]), 
                           NA, NA)
     colnames(plotDF2) <- c("mean", "sd", "Variable")
-    plotDF2$sd <- c(inDF$aCO2_sd[inDF$terms=="Microbial N Pool"], 
-                    inDF$eCO2_sd[inDF$terms=="Microbial N Pool"])
+    plotDF2$sd <- c(inDF$aCO2_sd[inDF$terms=="Microbial N Pool 0-10cm"], 
+                    inDF$eCO2_sd[inDF$terms=="Microbial N Pool 0-10cm"])
     plotDF2$Variable <- rep(c("Microbe"), each=2)
     plotDF2$Trt <- rep(c("aCO2", "eCO2"), 1)
     plotDF2$pos <- with(plotDF2, mean + sd)
     plotDF2$neg <- with(plotDF2, mean - sd)
     
     ### Plot 3
-    plotDF3 <- data.frame(c(inDF$aCO2[inDF$terms=="Wood N Pool"], 
-                            inDF$eCO2[inDF$terms=="Wood N Pool"]), 
-                          NA, NA)
+    plotDF3 <- data.frame("mean"=c(inDF$aCO2[inDF$terms=="Wood N Pool"], 
+                                   inDF$eCO2[inDF$terms=="Wood N Pool"],
+                                   inDF$aCO2[inDF$terms=="Sapwood N Pool"], 
+                                   inDF$eCO2[inDF$terms=="Sapwood N Pool"],
+                                   inDF$aCO2[inDF$terms=="Heartwood N Pool"], 
+                                   inDF$eCO2[inDF$terms=="Heartwood N Pool"]), 
+                          "sd"=NA, "Variable"=NA)
     colnames(plotDF3) <- c("mean", "sd", "Variable")
     plotDF3$sd <- c(inDF$aCO2_sd[inDF$terms=="Wood N Pool"], 
-                    inDF$eCO2_sd[inDF$terms=="Wood N Pool"])
-    plotDF3$Variable <- rep(c("Wood"), each=2)
+                    inDF$eCO2_sd[inDF$terms=="Wood N Pool"],
+                    inDF$aCO2_sd[inDF$terms=="Sapwood N Pool"], 
+                    inDF$eCO2_sd[inDF$terms=="Sapwood N Pool"],
+                    inDF$aCO2_sd[inDF$terms=="Heartwood N Pool"], 
+                    inDF$eCO2_sd[inDF$terms=="Heartwood N Pool"])
+    plotDF3$Variable <- rep(c("Wood", "Sapwood", "Heartwood"), each=2)
     plotDF3$Trt <- rep(c("aCO2", "eCO2"), 1)
     plotDF3$pos <- with(plotDF3, mean + sd)
     plotDF3$neg <- with(plotDF3, mean - sd)
     
     
     ### Plot 4
-    plotDF4 <- data.frame(c(inDF$aCO2[inDF$terms=="Soil N Pool"], 
-                            inDF$eCO2[inDF$terms=="Soil N Pool"]), 
+    plotDF4 <- data.frame(c(inDF$aCO2[inDF$terms=="Soil N Pool 0-10cm"], 
+                            inDF$eCO2[inDF$terms=="Soil N Pool 0-10cm"],
+                            inDF$aCO2[inDF$terms=="Soil N Pool 10-30cm"], 
+                            inDF$eCO2[inDF$terms=="Soil N Pool 10-30cm"]), 
                           NA, NA)
     colnames(plotDF4) <- c("mean", "sd", "Variable")
-    plotDF4$sd <- c(inDF$aCO2_sd[inDF$terms=="Soil N Pool"], 
-                    inDF$eCO2_sd[inDF$terms=="Soil N Pool"])
-    plotDF4$Variable <- rep(c("Soil"), each=2)
+    plotDF4$sd <- c(inDF$aCO2_sd[inDF$terms=="Soil N Pool 0-10cm"], 
+                    inDF$eCO2_sd[inDF$terms=="Soil N Pool 0-10cm"],
+                    inDF$aCO2_sd[inDF$terms=="Soil N Pool 10-30cm"], 
+                    inDF$eCO2_sd[inDF$terms=="Soil N Pool 10-30cm"])
+    plotDF4$Variable <- rep(c("Soil 0-10cm", "Soil 10-30cm"), each=2)
     plotDF4$Trt <- rep(c("aCO2", "eCO2"), 1)
     plotDF4$pos <- with(plotDF4, mean + sd)
     plotDF4$neg <- with(plotDF4, mean - sd)
+    
+    
+    ### Plot 5
+    plotDF5 <- data.frame(c(inDF$aCO2[inDF$terms=="Soil NO3-N Pool 0-10cm"], 
+                            inDF$eCO2[inDF$terms=="Soil NO3-N Pool 0-10cm"],
+                            inDF$aCO2[inDF$terms=="Soil NH4-N Pool 0-10cm"], 
+                            inDF$eCO2[inDF$terms=="Soil NH4-N Pool 0-10cm"]), 
+                          NA, NA)
+    colnames(plotDF5) <- c("mean", "sd", "Variable")
+    plotDF5$sd <- c(inDF$aCO2_sd[inDF$terms=="Soil NO3-N Pool 0-10cm"], 
+                    inDF$eCO2_sd[inDF$terms=="Soil NO3-N Pool 0-10cm"],
+                    inDF$aCO2_sd[inDF$terms=="Soil NH4-N Pool 0-10cm"], 
+                    inDF$eCO2_sd[inDF$terms=="Soil NH4-N Pool 0-10cm"])
+    plotDF5$Variable <- rep(c("NO3-N", "NH4-N"), each=2)
+    plotDF5$Trt <- rep(c("aCO2", "eCO2"), 1)
+    plotDF5$pos <- with(plotDF5, mean + sd)
+    plotDF5$neg <- with(plotDF5, mean - sd)
     
     ### Plotting
     p1 <- ggplot(plotDF1, aes(x=Variable, y=mean))+
@@ -145,17 +174,38 @@ make_n_pools_summary_plots <- function(inDF) {
                             labels=c(expression(aCO[2]), expression(eCO[2])))
     
     
+    p5 <- ggplot(plotDF5, aes(x=Variable, y=mean))+
+        geom_bar(stat = "identity", aes(fill=Trt), position="dodge")+
+        geom_errorbar(aes(ymax=pos, ymin=neg, color=factor(Trt)), 
+                      position = position_dodge(0.9), width=0.2, size=0.4) +
+        labs(x="", y=expression(paste("N pool (g N ", m^-2, ")")))+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.title.x = element_text(size=10), 
+              axis.text.x = element_text(size=10),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_blank(),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="bottom")+
+        scale_fill_manual(name="", values = c("aCO2" = "blue2", "eCO2" = "red3"),
+                          labels=c(expression(aCO[2]), expression(eCO[2])))+
+        scale_colour_manual(name="", values = c("aCO2" = "black", "eCO2" = "black"),
+                            labels=c(expression(aCO[2]), expression(eCO[2])))
+    
+    
     grid.labs <- c("(a)", "(b)", "(c)", "(d)")
     
     require(grid)
     require(cowplot)
     
     ## plot 
-    pdf("plots_tables/N_Pool_Summary_Plots.pdf", width=8,height=8)
-    plot_grid(p1, p2, p3, p4, labels="", ncol=2, align="v", axis = "l",
-              rel_heights = c(1, 1.2))
+    pdf("output/n_budget/N_Pool_Summary_Plots.pdf", width=8,height=8)
+    plot_grid(p1, p2, p3, p4, p5, labels="", ncol=2, align="v", axis = "l",
+              rel_heights = c(1, 1, 1.2))
     grid.text(grid.labs, x = c(0.12, 0.62, 0.12, 0.62),
-              y = c(0.95, 0.95, 0.5, 0.5), 
+              y = c(0.95, 0.95, 0.65, 0.65, 0.35), 
               gp=gpar(fontsize=14, col="black", fontface="bold"))
     dev.off()
     

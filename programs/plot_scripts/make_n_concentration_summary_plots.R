@@ -21,14 +21,14 @@ make_n_concentration_summary_plots <- function(inDF) {
     ### Plot 3
     plotDF3 <- data.frame(c(inDF$aCO2[inDF$conc.terms=="Fine Root N Conc"], 
                             inDF$eCO2[inDF$conc.terms=="Fine Root N Conc"],
-                            inDF$aCO2[inDF$conc.terms=="Wood N Conc"], 
-                            inDF$eCO2[inDF$conc.terms=="Wood N Conc"]), 
+                            inDF$aCO2[inDF$conc.terms=="Sapwood N Conc"], 
+                            inDF$eCO2[inDF$conc.terms=="Sapwood N Conc"]), 
                           NA, NA)
     colnames(plotDF3) <- c("mean", "sd", "Variable")
     plotDF3$sd <- c(inDF$aCO2_sd[inDF$conc.terms=="Fine Root N Conc"], 
                     inDF$eCO2_sd[inDF$conc.terms=="Fine Root N Conc"],
-                    inDF$aCO2_sd[inDF$conc.terms=="Wood N Conc"], 
-                    inDF$eCO2_sd[inDF$conc.terms=="Wood N Conc"])
+                    inDF$aCO2_sd[inDF$conc.terms=="Sapwood N Conc"], 
+                    inDF$eCO2_sd[inDF$conc.terms=="Sapwood N Conc"])
     plotDF3$Variable <- rep(c("Fine Root", "Sapwood"), each=2)
     plotDF3$Trt <- rep(c("aCO2", "eCO2"), 2)
     plotDF3$pos <- with(plotDF3, mean + sd)
@@ -49,17 +49,17 @@ make_n_concentration_summary_plots <- function(inDF) {
     plotDF4$neg <- with(plotDF4, mean - sd)
     
     ### Plot 5
-    plotDF5 <- data.frame(c(inDF$aCO2[inDF$conc.terms=="Soil N Conc"], 
-                            inDF$eCO2[inDF$conc.terms=="Soil N Conc"],
-                            inDF$aCO2[inDF$conc.terms=="Microbial N Conc"], 
-                            inDF$eCO2[inDF$conc.terms=="Microbial N Conc"]), 
+    plotDF5 <- data.frame(c(inDF$aCO2[inDF$conc.terms=="Soil N Conc 0-10cm"], 
+                            inDF$eCO2[inDF$conc.terms=="Soil N Conc 0-10cm"],
+                            inDF$aCO2[inDF$conc.terms=="Microbial N Conc 0-10cm"], 
+                            inDF$eCO2[inDF$conc.terms=="Microbial N Conc 0-10cm"]), 
                           NA, NA)
     colnames(plotDF5) <- c("mean", "sd", "Variable")
-    plotDF5$sd <- c(inDF$aCO2_sd[inDF$conc.terms=="Soil N Conc"], 
-                    inDF$eCO2_sd[inDF$conc.terms=="Soil N Conc"],
-                    inDF$aCO2_sd[inDF$conc.terms=="Microbial N Conc"], 
-                    inDF$eCO2_sd[inDF$conc.terms=="Microbial N Conc"])
-    plotDF5$Variable <- rep(c("Soil", "Microbe"), each=2)
+    plotDF5$sd <- c(inDF$aCO2_sd[inDF$conc.terms=="Soil N Conc 0-10cm"], 
+                    inDF$eCO2_sd[inDF$conc.terms=="Soil N Conc 0-10cm"],
+                    inDF$aCO2_sd[inDF$conc.terms=="Microbial N Conc 0-10cm"], 
+                    inDF$eCO2_sd[inDF$conc.terms=="Microbial N Conc 0-10cm"])
+    plotDF5$Variable <- rep(c("Soil 0-10cm", "Microbe"), each=2)
     plotDF5$Trt <- rep(c("aCO2", "eCO2"), 2)
     plotDF5$pos <- with(plotDF5, mean + sd)
     plotDF5$neg <- with(plotDF5, mean - sd)
@@ -161,7 +161,7 @@ make_n_concentration_summary_plots <- function(inDF) {
     require(cowplot)
     
     ## plot 
-    pdf("plots_tables/N_Concentration_Summary_Plots.pdf", width=8,height=8)
+    pdf("output/n_budget/N_Concentration_Summary_Plots.pdf", width=8,height=8)
     plot_grid(p1, p4, p5, p3, labels="", ncol=2, align="v", axis = "l",
               rel_heights = c(1, 1.2))
     grid.text(grid.labs, x = c(0.1, 0.6, 0.1, 0.6),

@@ -492,6 +492,7 @@ import_model_output()
 
 
 ### read in MIP output over observed period (var scenario)
+### go into function to plot
 scenario="VAR"
 nconDF=summary_table_concentration
 nfluxDF=summary_table_flux
@@ -526,17 +527,21 @@ make_time_averaged_data_model_comparison_over_obs_period(nconDF=summary_table_co
 ### for all these plotting scripts, need to open the function, then make plots within the function
 
 source("programs/plot_scripts/make_n_budget_summary_plots.R")
+inDF=total_n_budget
 make_n_budget_summary_plots(inDF=total_n_budget)
 
 source("programs/plot_scripts/make_n_concentration_summary_plots.R")
+inDF=summary_table_concentration
 make_n_concentration_summary_plots(inDF=summary_table_concentration)
 
 
 source("programs/plot_scripts/make_n_pools_summary_plots.R")
+inDF=summary_table_pool
 make_n_pools_summary_plots(inDF=summary_table_pool)
 
 
 source("programs/plot_scripts/make_n_fluxes_summary_plots.R")
+inDF=summary_table_flux
 make_n_fluxes_summary_plots(inDF=summary_table_flux)
 
 

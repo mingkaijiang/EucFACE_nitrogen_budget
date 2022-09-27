@@ -308,7 +308,7 @@ make_n_budget_summary_plots <- function(inDF) {
     require(cowplot)
     
     ## plot 
-    pdf("plots_tables/N_Budget_Summary_Plots.pdf", width=10,height=14)
+    pdf("output/n_budget/N_Budget_Summary_Plots.pdf", width=10,height=14)
     plot_grid(p3, p4, p5, p6, p1, p2, p7, p8, labels="", ncol=2, align="v", axis = "l",
               rel_heights = c(1, 1, 1.2, 1))
     grid.text(grid.labs, x = c(0.1, 0.6, 0.1, 0.6, 0.1, 0.6, 0.1, 0.6),
