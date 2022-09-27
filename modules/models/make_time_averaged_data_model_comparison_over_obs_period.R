@@ -481,193 +481,11 @@ make_time_averaged_data_model_comparison_over_obs_period <- function(nconDF,
                          label=c(model.labels, "obs" = expression(bold("OBS"))));p6
     
     
-    
-    
-    
-    
-    
-    ################# PUE ####################
-    subDF1 <- subset(budgetDF, Variable%in%c("PUE"))
-    subDF1$meanvalue <- ifelse(is.infinite(subDF1$meanvalue), NA, subDF1$meanvalue)  
-    
-    
-    plotDF1 <- subDF1[subDF1$Trt=="aCO2",]
-    plotDF2 <- subDF1[subDF1$Trt=="pct_diff",]
-    
-    
-    ## stoichiometry
-    p11 <- ggplot(data=plotDF1, 
-                  aes(Group, meanvalue, group=Group)) +
-        geom_bar(stat = "identity", aes(fill=Group), 
-                 position="dodge", col="black") +
-        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
-        theme_linedraw() +
-        theme(panel.grid.minor=element_blank(),
-              axis.text.x=element_text(size=12),
-              axis.title.x=element_text(size=14),
-              axis.text.y=element_text(size=12),
-              axis.title.y=element_text(size=14),
-              legend.text=element_text(size=12),
-              legend.title=element_text(size=14),
-              panel.grid.major=element_blank(),
-              legend.position="none",
-              legend.box = 'horizontal',
-              legend.box.just = 'left',
-              legend.background = element_rect(fill="grey",
-                                               size=0.5, linetype="solid", 
-                                               colour ="black"),
-              plot.title = element_text(size=14, face="bold.italic", 
-                                        hjust = 0.5))+
-        ylab(expression("PUE (g C " * g^-1 * " P)"))+
-        scale_x_discrete(limit=c(mod.list, "obs"),
-                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
-        scale_fill_manual(name="Model",
-                          values=c(col.values, obs="black"),
-                          labels=c(model.labels, "obs"= "OBS"))+
-        guides(fill=guide_legend(nrow=6));p11
-    
-    
-    
-    
-    p12 <- ggplot(data=plotDF2, 
-                  aes(Group, meanvalue)) +
-        geom_bar(stat = "identity", aes(fill=Group), 
-                 position=position_dodge2(), col="black") +
-        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
-        xlab("")+
-        theme_linedraw() +
-        theme(panel.grid.minor=element_blank(),
-              axis.text.x=element_text(size=12),
-              axis.title.x=element_text(size=14),
-              axis.text.y=element_text(size=12),
-              axis.title.y=element_text(size=14),
-              legend.text=element_text(size=12),
-              legend.title=element_text(size=14),
-              panel.grid.major=element_blank(),
-              legend.position="none",
-              legend.box = 'horizontal',
-              legend.box.just = 'left',
-              plot.title = element_text(size=14, face="bold.italic", 
-                                        hjust = 0.5))+
-        ylab(expression(CO[2] * " effect (%)"))+
-        scale_x_discrete(limit=c(mod.list, "obs"),
-                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
-        scale_fill_manual(name="Model",
-                          values=c(col.values, obs="black"),
-                          labels=c(model.labels, "obs"= "OBS"))+
-        guides(fill=guide_legend(nrow=6)); p12
-    
-    
-    
-    
-    ################# Plab ####################
-    plabDF <- prepare_plot_DF_for_time_averaged_data_model_intercomparison(eucDF=eucDF,
-                                                                           ambDF=ambDF.sum,
-                                                                           eleDF=eleDF.sum,
-                                                                           difDF=annDF.diff.sum,
-                                                                           var.list=c("PLAB"),
-                                                                           calculate.total=F)
-    
-    
-    
-    
-    ### split into ambDF, pctDF
-    plotDF1 <- plabDF[plabDF$Trt=="aCO2"&plabDF$Variable%in%c("PLAB"),]
-    
-    plotDF2 <- plabDF[plabDF$Trt=="pct_diff",]
-    
-    ### ELMV1 assumes top 1 m soil, not top 10 cm
-    plotDF1$meanvalue[plotDF1$Group=="B_ELMV1"] <- plotDF1$meanvalue[plotDF1$Group=="B_ELMV1"]/ 10
-    plotDF1$sdvalue[plotDF1$Group=="B_ELMV1"] <- plotDF1$sdvalue[plotDF1$Group=="B_ELMV1"]/ 10
-    
-    ## plab pool
-    #require(ggbreak)
-    
-    p13 <- ggplot(data=plotDF1, 
-                  aes(Group, meanvalue, group=Group)) +
-        geom_bar(stat = "identity", aes(fill=Group), 
-                 position="dodge", col="black") +
-        geom_errorbar(data=plotDF1, 
-                      aes(x=Group, ymin=meanvalue-sdvalue,
-                          ymax=meanvalue+sdvalue), 
-                      col="black", 
-                      position=position_dodge2(), width=0.3)+
-        geom_point(data=plotDF1, aes(x=Group, y=meanvalue), 
-                   position=position_dodge2(width=0.9), col="black",
-                   fill="white", size=2, pch=21)+
-        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
-        theme_linedraw() +
-        #scale_y_break(c(2,10))+
-        theme(panel.grid.minor=element_blank(),
-              axis.text.x=element_text(size=12),
-              axis.title.x=element_text(size=14),
-              axis.text.y=element_text(size=12),
-              axis.title.y=element_text(size=14),
-              legend.text=element_text(size=12),
-              legend.title=element_text(size=14),
-              panel.grid.major=element_blank(),
-              legend.position="none",
-              legend.box = 'horizontal',
-              legend.box.just = 'left',
-              legend.background = element_rect(fill="grey",
-                                               size=0.5, linetype="solid", 
-                                               colour ="black"),
-              plot.title = element_text(size=14, face="bold.italic", 
-                                        hjust = 0.5))+
-        ylab(expression(P[lab] * " (g P " * m^-2 * ")"))+
-        scale_x_discrete(limit=c(mod.list, "obs"),
-                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
-        scale_fill_manual(name="Model",
-                          values=c(col.values, obs="black"),
-                          labels=c(model.labels, "obs"= "OBS"))+
-        guides(fill=guide_legend(nrow=6));p13
-    
-    
-    
-    
-    p14 <- ggplot(data=plotDF2, 
-                  aes(Group, meanvalue)) +
-        geom_bar(stat = "identity", aes(fill=Group), 
-                 position=position_dodge2(), col="black") +
-        geom_errorbar(data=plotDF2, 
-                      aes(x=Group, ymin=meanvalue-sdvalue,
-                          ymax=meanvalue+sdvalue), 
-                      col="black", 
-                      position=position_dodge2(), width=0.3)+
-        geom_point(data=plotDF2, aes(x=Group, y=meanvalue), 
-                   position=position_dodge2(width=0.9), col="black",
-                   fill="white", size=2, pch=21)+
-        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
-        xlab("")+
-        theme_linedraw() +
-        theme(panel.grid.minor=element_blank(),
-              axis.text.x=element_text(size=12),
-              axis.title.x=element_text(size=14),
-              axis.text.y=element_text(size=12),
-              axis.title.y=element_text(size=14),
-              legend.text=element_text(size=12),
-              legend.title=element_text(size=14),
-              panel.grid.major=element_blank(),
-              legend.position="none",
-              legend.box = 'horizontal',
-              legend.box.just = 'left',
-              plot.title = element_text(size=14, face="bold.italic", 
-                                        hjust = 0.5))+
-        ylab(expression(CO[2] * " effect (%)"))+
-        scale_x_discrete(limit=c(mod.list, "obs"),
-                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
-        scale_fill_manual(name="Model",
-                          values=c(col.values, obs="black"),
-                          labels=c(model.labels, "obs"= "OBS"))+
-        guides(fill=guide_legend(nrow=6)); p14
-    
-    pdf(paste0(out.dir, "/MIP_time_averaged_", scenario, "_comparison_P_variables.pdf"), 
+    pdf(paste0(out.dir, "/mip_time_averaged_", scenario, "_comparison_n_variables.pdf"), 
         width=16, height=16)
-    plot_grid(p1, p2,   # Pveg
-              p5, p6,   # pupt and pmin
-              #p11, p12, # PUE
-              #p9, p10,  # CP ratio
-              p13, p14, # Plab
+    plot_grid(p1, p2,
+              p3, p4,
+              p5, p6, 
               labels=c("(a)", "(b)", "(c)", "(d)",
                        "(e)", "(f)"), label_x=0.1, label_y=0.95,
               label_size=24,
@@ -675,154 +493,429 @@ make_time_averaged_data_model_comparison_over_obs_period <- function(nconDF,
     dev.off()
     
     
-    pdf(paste0(out.dir, "/MIP_time_averaged_", scenario, "_comparison_P_variables_SI.pdf"), 
+    
+    
+    ################# CN ratio ####################
+    myDF <- prepare_mip_cn_ratio(cnDF=cnDF,
+                                 ambDF=ambDF.sum,
+                                 eleDF=eleDF.sum)
+    
+    
+    ### split into ambDF, pctDF
+    plotDF1 <- myDF[myDF$Variable=="canopy",]
+    plotDF2 <- myDF[myDF$Variable=="leaflitter",]
+    plotDF3 <- myDF[myDF$Variable=="wood",]
+    plotDF4 <- myDF[myDF$Variable=="fineroot",]
+    plotDF5 <- myDF[myDF$Variable=="soil_0_10",]
+
+    
+    
+    ## stoichiometry
+    p11 <- ggplot(data=plotDF1, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Canopy CN ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p11
+    
+    
+    
+    
+    p12 <- ggplot(data=plotDF2, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Leaflitter CN ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p12
+    
+    
+    p13 <- ggplot(data=plotDF3, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Wood CN ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p13
+    
+    
+    p14 <- ggplot(data=plotDF4, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Fineroot CN ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p14
+    
+    
+    
+    p15 <- ggplot(data=plotDF5, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Soil CN ratio (0-10cm)")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p15
+    
+    
+    
+    
+    
+    
+    pdf(paste0(out.dir, "/mip_time_averaged_", scenario, "_comparison_cn_ratios.pdf"), 
         width=16, height=16)
-    plot_grid(p3, p4,   # Pgrowth
-              #p7, p8,   # Pupt over requirement
-              p11, p12, # PUE
-              p9, p10,  # CP ratio
-              
-              labels=c("(a)", "(b)",
-                       "(c)", "(d)",
-                       "(e)", "(f)"),
-              #"(g)", "(h)"), 
-              label_x=0.1, label_y=0.95,
+    plot_grid(p11, p12,  
+              p13, p14,
+              p15,
+              labels=c("(a)", "(b)", "(c)", "(d)",
+                       "(e)"), label_x=0.1, label_y=0.95,
               label_size=24,
               ncol=2)
     dev.off()
     
     
-    ###########################################################################
-    ##### Step 4. Time-varying validation
-    #
-    ##### Leaf area index
-    #### A time series LAI data over the period of 2012 - 2016 was provided for validation purpose. 
-    #### Models should aim to match the magnitude of LAI as well as its temporal patterns. 
-    #### Note that in the observed dataset, the LAI data is really indicative of the vegetation structure as well as canopy leaf area. 
-    #### validation LAI
-    #laiDF <- read.csv("validation_dataset/EucFACE_LAI_2012_2016.csv")
-    #laiDF <- laiDF[laiDF$Trt=="aCO2",]
-    #laiDF$Date <- as.Date(as.character(laiDF$Date))
-    #laiDF$ModName <- "OBS"
-    #names(laiDF)[names(laiDF)=="lai"] <- "LAI"
-    #laiDF <- laiDF[,c("Date", "LAI", "ModName")]
-    #
-    #
-    #### read in multi-model lai data
-    #modDF <- readRDS(paste0(out.dir, "/MIP_obs_var_amb_daily.rds"))
-    #
-    #### simulated LAI, subset
-    #subDF <- subset(modDF, YEAR <= 2016)
-    #subDF <- subDF[,c("YEAR", "DOY", "Date", "LAI", "ModName")]
-    #subDF$Date <- as.Date(as.character(subDF$Date))
-    #subDF <- subDF[,c("Date", "LAI", "ModName")]
-    #    
-    #### there is something wrong with LPJGP-VD, we may need to do something about it later
-    ##tDF <- subDF[subDF$ModName=="L_LPJGP-VD",]
-    ##summary(tDF$LAI)
-    #
-    #### merge the two dataset
-    #testDF1 <- rbind(subDF, laiDF)
-    #
-    #### plot all data
-    #p1 <- ggplot(testDF1, aes(x=Date)) +
-    #    geom_line(aes(y=LAI, color=ModName, lty=ModName), lwd = 1) +
-    #    theme_linedraw() +
-    #    theme(panel.grid.minor=element_blank(),
-    #          axis.title.x = element_text(size=14), 
-    #          axis.text.x = element_text(size=12),
-    #          axis.text.y=element_text(size=12),
-    #          axis.title.y=element_text(size=14),
-    #          legend.text=element_text(size=12),
-    #          legend.title=element_text(size=12),
-    #          panel.grid.major=element_blank(),
-    #          plot.title = element_text(size = 10, face = "bold"),
-    #          legend.position="right")+
-    #    scale_color_manual(name="Model",
-    #                       values=c(col.values, "OBS"="black"),
-    #                       labels=c(model.labels, "OBS"= "OBS"))+
-    #    scale_linetype_manual(name="Model", 
-    #                          values=c(linetype.values, "OBS"=1),
-    #                          labels=c(model.labels, "OBS"="OBS"))+
-    #    guides(fill = guide_legend(override.aes = list(col = c(col.values, "OBS"="black"),
-    #                                                   lty = c(linetype.values, "OBS"=1))),
-    #           color = guide_legend(nrow=12, byrow=F))+
-    #    ylab("LAI"); p1
-    #
-    #
-    ##### Soil respiration
-    #### The measured soil respiration rate represents both root 
-    #### and soil heterotrophic respiration flux. 
-    #### It was up-scaled from the LICOR chambers by averaging 
-    #### all measurements within the same treatment. 
-    #### It was a model product, 
-    #### in that we used DAMM model to establish relationship with soil temperature, 
-    #### and then obtained the daily rate throughout the year. 
-    #### Nevertheless, we expect modelers to provide a good match simulation to this dataset. 
-    #
-    #### Note that we didn't ask the modelers to output soil respiration flux in the output protocol. 
-    #### Please add heterotrophic respiration and root respiration to obtain soil respiration flux. 
-    #### Also, please note that, the unit for all carbon fluxes is given in the output protocol, as gC m-2 d-1. 
-    #### validation Rsoil
-    #rsoilDF <- read.csv("validation_dataset/EucFACE_daily_soil_respiration_flux_2013_2015.csv")
-    #rsoilDF <- rsoilDF[rsoilDF$Trt=="aCO2",]
-    #rsoilDF$Date <- as.Date(as.character(rsoilDF$Date))
-    #
-    #### convert unit, from mg m-2 d-1 to g m-2 d-1
-    #rsoilDF$Rsoil <- rsoilDF$Rsoil_mg_m2_d / 1000.0
-    #rsoilDF$ModName <- "OBS"
-    #rsoilDF <- rsoilDF[,c("Date", "Rsoil", "ModName")]
-    #
-    #### simulated Rsoil, subset
-    #subDF <- subset(modDF, YEAR <= 2015 & YEAR > 2012)
-    #subDF <- subDF[,c("YEAR", "DOY", "Date", "RHET", "RCR", "RFR", "ModName")]
-    #subDF$Date <- as.Date(as.character(subDF$Date))
-    #
-    #subDF[subDF<=-999.] <- NA
-    #
-    #subDF$Rsoil<- rowSums(data.frame(subDF$RHET, subDF$RCR, subDF$RFR), na.rm=T)
-    #subDF <- subDF[,c("Date", "Rsoil", "ModName")]
-    #
-    #
-    #### merge the two dataset
-    #testDF1 <- rbind(subDF, rsoilDF)
-    #
-    #### plot all data
-    #p2 <- ggplot(testDF1, aes(x=Date)) +
-    #    geom_line(aes(y=Rsoil, color=ModName, lty=ModName), lwd = 1) +
-    #    theme_linedraw() +
-    #    theme(panel.grid.minor=element_blank(),
-    #          axis.title.x = element_text(size=14), 
-    #          axis.text.x = element_text(size=12),
-    #          axis.text.y=element_text(size=12),
-    #          axis.title.y=element_text(size=14),
-    #          legend.text=element_text(size=12),
-    #          legend.title=element_text(size=12),
-    #          panel.grid.major=element_blank(),
-    #          plot.title = element_text(size = 10, face = "bold"),
-    #          legend.position="right")+
-    #    scale_color_manual(name="Model",
-    #                       values=c(col.values, "OBS"="black"),
-    #                       labels=c(model.labels, "OBS"= "OBS"))+
-    #    scale_linetype_manual(name="Model", 
-    #                          values=c(linetype.values, "OBS"=1),
-    #                          labels=c(model.labels, "OBS"="OBS"))+
-    #    guides(fill = guide_legend(override.aes = list(col = c(col.values, "OBS"="black"),
-    #                                                   lty = c(linetype.values, "OBS"=1))),
-    #           color = guide_legend(nrow=12, byrow=F))+
-    #ylab("Soil respiration flux"); p2
-    #
-    #
-    #
-    #
-    #### print plots to file, change numbering if needed
-    #pdf(paste0(out.dir, '/MIP_Time_varying_variables.pdf',sep=''),width=12,height=8)
-    #for (i in 1:2) {
-    #    print(get(paste("p",i,sep="")))
-    #}
-    #dev.off()
-    #
-    ###########################################################################
+    
+    ################# NP ratio ####################
+    myDF <- prepare_mip_np_ratio(npDF=npDF,
+                                 ambDF=ambDF.sum,
+                                 eleDF=eleDF.sum)
+    
+    
+    ### split into ambDF, pctDF
+    plotDF1 <- myDF[myDF$Variable=="canopy",]
+    plotDF2 <- myDF[myDF$Variable=="leaflitter",]
+    plotDF3 <- myDF[myDF$Variable=="wood",]
+    plotDF4 <- myDF[myDF$Variable=="fineroot",]
+    plotDF5 <- myDF[myDF$Variable=="soil_0_10",]
+    
+    
+    
+    ## stoichiometry
+    p11 <- ggplot(data=plotDF1, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Canopy NP ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p11
+    
+    
+    
+    
+    p12 <- ggplot(data=plotDF2, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Leaflitter NP ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p12
+    
+    
+    p13 <- ggplot(data=plotDF3, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Wood NP ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p13
+    
+    
+    p14 <- ggplot(data=plotDF4, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Fineroot NP ratio")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p14
+    
+    
+    
+    p15 <- ggplot(data=plotDF5, 
+                  aes(Group, meanvalue, group=Trt)) +
+        geom_bar(stat = "identity", aes(fill=Trt), 
+                 position="dodge", col="black") +
+        geom_errorbar(aes(x=Group, ymin=meanvalue-sdvalue,
+                          ymax=meanvalue+sdvalue, group=Trt), 
+                      col="black", 
+                      position=position_dodge2(), width=0.9)+
+        geom_vline(xintercept=c(6.5, 8.5, 10.5), lty=2)+
+        theme_linedraw() +
+        theme(panel.grid.minor=element_blank(),
+              axis.text.x=element_text(size=12),
+              axis.title.x=element_text(size=14),
+              axis.text.y=element_text(size=12),
+              axis.title.y=element_text(size=14),
+              legend.text=element_text(size=12),
+              legend.title=element_text(size=14),
+              panel.grid.major=element_blank(),
+              legend.position="none",
+              legend.box = 'horizontal',
+              legend.box.just = 'left',
+              legend.background = element_rect(fill="grey",
+                                               size=0.5, linetype="solid", 
+                                               colour ="black"),
+              plot.title = element_text(size=14, face="bold.italic", 
+                                        hjust = 0.5))+
+        ylab("Soil NP ratio (0-10cm)")+
+        scale_x_discrete(limit=c(mod.list, "obs"),
+                         label=c(model.labels, "obs" = expression(bold("OBS"))))+
+        #scale_fill_manual(name="Model",
+        #                  values=c(col.values, obs="black"),
+        #                  labels=c(model.labels, "obs"= "OBS"))+
+        guides(fill=guide_legend(nrow=6));p15
+    
+    
+    
+    
+    
+    
+    pdf(paste0(out.dir, "/mip_time_averaged_", scenario, "_comparison_np_ratios.pdf"), 
+        width=16, height=16)
+    plot_grid(p11, p12,  
+              p13, p14,
+              p15,
+              labels=c("(a)", "(b)", "(c)", "(d)",
+                       "(e)"), label_x=0.1, label_y=0.95,
+              label_size=24,
+              ncol=2)
+    dev.off()
+    
+    
 }
 
     
