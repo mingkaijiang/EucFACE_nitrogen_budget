@@ -9,13 +9,15 @@
 #### Code structure:
 #### A1. Preparing necessary scripts
 #### B1. Compute nitrogen concentrations for major pools and fluxes
-#### B2. Compute biomass pools
-#### B3. Generate N pools and fluxes
-#### B4. Generate P concentrations
-#### B5. Generate N:P ratios
+#### B2. Compute retranslocation coefficients
+#### B3. Compute biomass pools
+#### B4. Generate N pools and fluxes
+#### B5. Import P concentrations
 #### B6. Generate summary tables, based on unnormalized responses
+#### C1. Import MIP output
+
+
 #### B7. Make plots, based on unnormalized responses
-#### C1. prepare model output
 #### D1. Merge data and model for comparison
 
 
@@ -71,7 +73,7 @@ leaflitter_n_concentration <- make_leaflitter_n_concentration()
 
 
 
-
+##### ---------------------------------------------------------------------------------------------------------##### 
 ########################### Step B2. Retranslocation coefficients
 ### retranslocation coefficients
 leaf_n_retrans_coefficient <- make_canopy_leaf_n_retranslocation_coefficient(df1=canopy_n_concentration,
@@ -93,8 +95,10 @@ wood_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
 ### assumed value
 coarseroot_n_retrans_coefficient <- make_stem_n_retrans_coefficient(retrans=0.3)
 
+
+
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step B2: preparing C related variables
+##### Step B3: preparing C related variables
 #### For all C pools, unit in g C m-2,
 #### For all C fluxes, output rate in unit of mg C m-2 d-1, and the period over which this rate applies
 
@@ -201,7 +205,7 @@ leaflitter_c_pool <- make_leaflitter_pool(c_fraction)
 
 
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step B3: Multiple pools and fluxes with concentration
+##### Step B4: Multiple pools and fluxes with concentration
 #### Note: % N of total dry biomass should NOT be directly applied to C result, 
 #### as the amount of C is not the amount of dry weight !!!
 
@@ -354,8 +358,10 @@ soil_leaching_n_flux <- make_soil_leaching_n_flux()
 atmospheric_deposition_n_flux <- make_atmospheric_deposition_n_flux()
 
 
+
+
 ##### ---------------------------------------------------------------------------------------------------------##### 
-##### Step B4: Import P-related variables -- yet to be finalized
+##### Step B5: Import P-related variables -- yet to be finalized
 import_P_budget_output()
 
 
@@ -447,7 +453,7 @@ summary_np_ratios <- make_summary_table_np_ratios(n_conc=summary_table_concentra
 
 
 
-### 6.3 some summary variables
+### Some summary variables
 ### vegetation standing N stocks
 vegetation_standing_n_stock <- make_vegetation_standing_n_stock(leaf=canopy_n_pool,
                                                                 wood=wood_n_pool,
@@ -469,9 +475,29 @@ plant_n_use_efficiency <- make_plant_N_use_efficiency(c_flux=summary_table_c_flu
                                                       n_flux=total_plant_n_fluxes)
 
 
-#### 6.3 N budget summary
+#### N budget summary
 ### Calculate all N budgeting variables
 total_n_budget <- make_total_n_budget()
+
+
+##### ---------------------------------------------------------------------------------------------------------##### 
+##### Step C1. import model output
+
+### prepare model defintions etc.
+source("programs/prepare_model.R")
+
+### read in MIP output over observed period (var scenario)
+scenario="VAR"
+make_time_averaged_data_model_comparison_over_obs_period(eucDF,
+                                                         scenario="VAR")
+
+
+
+
+
+
+
+
 
 
 
@@ -508,5 +534,5 @@ make_n_fluxes_summary_plots(inDF=summary_table_flux)
 ###### ---------------- End -------------------- ######
 #### clear wk space
 rm(list=ls(all=TRUE))
-options(war=0)
+options(war=0) 
 

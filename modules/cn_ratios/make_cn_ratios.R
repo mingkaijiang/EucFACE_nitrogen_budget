@@ -35,7 +35,7 @@ make_cn_ratios <- function(c_pool,
     out$microbe <- as.numeric(c_pool[c_pool$terms == "Microbial C Pool 0-10cm", 2:7]/n_pool[n_pool$terms == "Microbial N Pool 0-10cm",
                                                                                  2:7])
     
-    write.csv(out, "plots_tables/summary_cn_ratios.csv", row.names=F)
+    write.csv(out, "output/n_budget/summary_cn_ratios.csv", row.names=F)
     
     return(out)
     

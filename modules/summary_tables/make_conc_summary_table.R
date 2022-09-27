@@ -179,7 +179,15 @@ make_conc_summary_table <- function(canopy_n_concentration,
     treatDF$percent_diff <- round((treatDF$eCO2 - treatDF$aCO2) / (treatDF$aCO2) * 100, 2)
     
     
+    ### outDF
+    outDF <- treatDF[,c("conc.terms", "R1", "R2", "R3", "R4", "R5", "R6", "aCO2", "aCO2_sd", "eCO2","eCO2_sd", "diff",
+                        "percent_diff", "year_start", "year_end", "timepoint")]
+    
+    write.csv(outDF, paste0("output/n_budget/summary_table_n_concentration.csv"), row.names=F)
+    
+    
+    
     ##### output tables
-    return(treatDF)
+    return(outDF)
     
 }

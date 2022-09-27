@@ -25,18 +25,18 @@ calculate_canopy_n_retranslocation_flux <- function (tflux,
     
     
     ### make plot
-    plotDF <- rbind(subDF, subDF2)
-    plotDF$Trt <- "aCO2"
-    plotDF$Trt[plotDF$Ring%in%c(1,4,5)] <- "eCO2"
-    plotDF2 <- summaryBy(canopy_n_retrans_coef~Method+Trt, data=plotDF, na.rm=T, FUN=c(mean,sd),
-                         keep.names=T)
-    
-    p1 <- ggplot(plotDF2, aes(x=Trt, y=canopy_n_retrans_coef.mean, group=Method)) +
-        geom_bar(aes(fill=Method), position="dodge", stat="identity")
-    
-    pdf("plots_tables/checks/canopy_n_retranslocation_comparison.pdf")
-    plot(p1)
-    dev.off()
+    #plotDF <- rbind(subDF, subDF2)
+    #plotDF$Trt <- "aCO2"
+    #plotDF$Trt[plotDF$Ring%in%c(1,4,5)] <- "eCO2"
+    #plotDF2 <- summaryBy(canopy_n_retrans_coef~Method+Trt, data=plotDF, na.rm=T, FUN=c(mean,sd),
+    #                     keep.names=T)
+    #
+    #p1 <- ggplot(plotDF2, aes(x=Trt, y=canopy_n_retrans_coef.mean, group=Method)) +
+    #    geom_bar(aes(fill=Method), position="dodge", stat="identity")
+    #
+    #pdf("plots_tables/checks/canopy_n_retranslocation_comparison.pdf")
+    #plot(p1)
+    #dev.off()
     
     
     

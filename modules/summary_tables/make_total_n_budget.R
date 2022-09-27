@@ -56,7 +56,7 @@ make_total_n_budget <- function() {
     out$eCO2_sd <- rowSds(as.matrix(subset(out, select=c(R1, R4, R5))), na.rm=T)
     
     ### save
-    write.csv(out, "plots_tables/total_n_budget_unnormalized.csv", row.names=F)
+    write.csv(out, "output/n_budget/total_n_budget.csv", row.names=F)
     
     
     return(out)

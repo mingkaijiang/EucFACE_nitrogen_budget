@@ -317,39 +317,15 @@ make_c_flux_summary_table <- function(norm,
   ###### percent differences (eCO2 - aCO2) / aCO2 * 100
   treatDF$percent_diff <- round((treatDF$eCO2 - treatDF$aCO2) / (treatDF$aCO2) * 100, 2)
   
-  write.csv(treatDF, 
-            paste0("plots_tables/summary_tables/", norm, 
-                   "/summary_table_C_flux_", norm, ".csv"), row.names=F)
+  ### outDF
+  outDF <- treatDF[,c("terms", "R1", "R2", "R3", "R4", "R5", "R6", "aCO2", "aCO2_sd", "eCO2","eCO2_sd", "diff",
+                      "percent_diff", "year_start", "year_end", "timepoint")]
+  
+  write.csv(outDF, paste0("output/n_budget/summary_table_c_flux.csv"), row.names=F)
   
   
-  ### plot
-  #tmpDF1 <- treatDF[,c("terms", "aCO2", "eCO2")]
-  #tmpDF2 <- treatDF[,c("terms", "aCO2_sd", "eCO2_sd")]
-  #
-  #plotDF1 <- reshape::melt(tmpDF1, id.var="terms")
-  #plotDF2 <- reshape::melt(tmpDF2, id.var="terms")
-  #colnames(plotDF2) <- c("terms", "variable", "value_sd")
-  #plotDF2$variable <- gsub("_sd", "", plotDF2$variable)
-  #
-  #plotDF <- merge(plotDF1, plotDF2, by=c("terms", "variable"))
-  #plotDF$terms <- gsub(" C flux", "", plotDF$terms)
-  #
-  #p1 <- ggplot(plotDF, aes(terms, value, group=variable))+
-  #  geom_errorbar(aes(ymin=value-value_sd, ymax=value+value_sd),
-  #                position=position_dodge2(), width=0.3)+
-  #  geom_point(aes(fill=variable), pch=21, stat = "identity", size=2,
-  #             position=position_dodge2(width=0.3)) +
-  #  coord_flip()+
-  #  scale_fill_manual(name="",
-  #                    values=c("aCO2"="blue3",
-  #                             "eCO2"="red2"))
-  #
-  #pdf(paste0("plots_tables/summary_tables/", norm, "/C_flux_comparison.pdf"))
-  #plot(p1)
-  #dev.off()
   
   ##### output tables
-  return(treatDF)
-  
+  return(outDF)
 }
 

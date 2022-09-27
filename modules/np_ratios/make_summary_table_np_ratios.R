@@ -3,9 +3,9 @@ make_summary_table_np_ratios <- function(n_conc,
                                          n_pool) {
     
     ### read in P concentration, P fluxes and P pools
-    p_conc <- read.csv("plots_tables/summary_tables/p_budget/summary_table_P_concentration_unnormalized.csv")
-    p_flux <- read.csv("plots_tables/summary_tables/p_budget/summary_table_P_flux_unnormalized.csv")
-    p_pool <- read.csv("plots_tables/summary_tables/p_budget/summary_table_P_pool_unnormalized.csv")
+    p_conc <- read.csv("output/p_budget/summary_table_P_concentration_unnormalized.csv")
+    p_flux <- read.csv("output/p_budget/summary_table_P_flux_unnormalized.csv")
+    p_pool <- read.csv("output/p_budget/summary_table_P_pool_unnormalized.csv")
     
     
     ### prepare output data frame
@@ -44,7 +44,7 @@ make_summary_table_np_ratios <- function(n_conc,
     
     
 
-    write.csv(out, "plots_tables/summary_np_ratios.csv", row.names=F)
+    write.csv(out, "output/n_budget/summary_np_ratios.csv", row.names=F)
      
      return(out)
 }
