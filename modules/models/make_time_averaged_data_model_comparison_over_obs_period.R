@@ -1,4 +1,11 @@
-make_time_averaged_data_model_comparison_over_obs_period <- function(eucDF,
+make_time_averaged_data_model_comparison_over_obs_period <- function(nconDF,
+                                                                     nfluxDF,
+                                                                     npoolDF,
+                                                                     cpoolDF,
+                                                                     cfluxDF,
+                                                                     nbudgetDF,
+                                                                     cnDF,
+                                                                     npDF,
                                                                      scenario) {
     
     
@@ -15,7 +22,7 @@ make_time_averaged_data_model_comparison_over_obs_period <- function(eucDF,
     #### Set up basics
     ### setting out path to store the files
     ### this is only valid for variable climate
-    out.dir <- paste0(getwd(), "/output/MIP_output/OBS_output/", scenario, "/")
+    out.dir <- paste0(getwd(), "/output/mip/obs/")
     
     ### create output folder
     if(!dir.exists(out.dir)) {
@@ -24,16 +31,16 @@ make_time_averaged_data_model_comparison_over_obs_period <- function(eucDF,
     
     
     ### read in anual datasets
-    ambDF <- readRDS(paste0("output/MIP_output/processed_simulation/MIP_OBS_", scenario, "_AMB_annual.rds"))
-    eleDF <- readRDS(paste0("output/MIP_output/processed_simulation/MIP_OBS_", scenario, "_ELE_annual.rds"))
+    ambDF <- readRDS(paste0("output/mip/input/MIP_OBS_", scenario, "_AMB_annual.rds"))
+    eleDF <- readRDS(paste0("output/mip/input/MIP_OBS_", scenario, "_ELE_annual.rds"))
     
     d <- dim(ambDF)[2]
     
     ### remove N models
-    ambDF <- ambDF[ambDF$ModName!="I_GDAYN",]
-    ambDF <- ambDF[ambDF$ModName!="J_LPJGN",]
-    eleDF <- eleDF[eleDF$ModName!="I_GDAYN",]
-    eleDF <- eleDF[eleDF$ModName!="J_LPJGN",]
+    #ambDF <- ambDF[ambDF$ModName!="I_GDAYN",]
+    #ambDF <- ambDF[ambDF$ModName!="J_LPJGN",]
+    #eleDF <- eleDF[eleDF$ModName!="I_GDAYN",]
+    #eleDF <- eleDF[eleDF$ModName!="J_LPJGN",]
     
     #### calculate 4-yr means in the simulation datasets
     ambDF <- subset(ambDF, YEAR>2012 & YEAR<2017)

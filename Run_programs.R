@@ -486,9 +486,29 @@ total_n_budget <- make_total_n_budget()
 ### prepare model defintions etc.
 source("programs/prepare_model.R")
 
+
+### import model output
+import_model_output()
+
+
 ### read in MIP output over observed period (var scenario)
 scenario="VAR"
-make_time_averaged_data_model_comparison_over_obs_period(eucDF,
+nconDF=summary_table_concentration
+nfluxDF=summary_table_flux
+npoolDF=summary_table_pool
+cpoolDF=summary_table_c_pool
+cfluxDF=summary_table_c_flux
+nbudgetDF=total_n_budget
+cnDF=summary_cn_ratios
+npDF=summary_np_ratios
+make_time_averaged_data_model_comparison_over_obs_period(nconDF=summary_table_concentration,
+                                                         nfluxDF=summary_table_flux,
+                                                         npoolDF=summary_table_pool,
+                                                         cpoolDF=summary_table_c_pool,
+                                                         cfluxDF=summary_table_c_flux,
+                                                         nbudgetDF=total_n_budget,
+                                                         cnDF=summary_cn_ratios,
+                                                         npDF=summary_np_ratios,
                                                          scenario="VAR")
 
 
